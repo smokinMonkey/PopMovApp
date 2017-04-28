@@ -1,12 +1,13 @@
 package com.smokinmonkey.popularmoviesapp;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.smokinmonkey.popularmoviesapp.Utilities.Movie;
 import com.squareup.picasso.Picasso;
@@ -42,7 +43,7 @@ public class MovieListAdapter extends BaseAdapter {
     public long getItemId(int position) { return position; }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView (final int position, View convertView, ViewGroup parent) {
 
         if(convertView == null) {
             convertView = LayoutInflater.from(mContext)
@@ -50,13 +51,34 @@ public class MovieListAdapter extends BaseAdapter {
         }
 
         ImageView mMoviePoster = (ImageView) convertView.findViewById(R.id.ivMoviePoster);
-        TextView mMovieTitle = (TextView) convertView.findViewById(R.id.tvMovieTitle);
-        mMovieTitle.setText(mlaMovieList[position].getOriginalTitle());
+
+        //TextView mMovieTitle = (TextView) convertView.findViewById(R.id.tvMovieTitle);
+        //mMovieTitle.setText(mlaMovieList[position].getOriginalTitle());
 
         Picasso
                 .with(mContext)
                 .load(mlaMovieList[position].getImagePosterStr())
                 .into(mMoviePoster);
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Class destinationClass = DetailActivity.class;
+                Intent intentToStartDetailActivity = new Intent(mContext, destinationClass);
+
+                Bundle b = new Bundle();
+                b.putSerializable("MovieDetails", mlaMovieList[position]);
+                intentToStartDetailActivity.putExtras(b);
+
+                mContext.startActivity(intentToStartDetailActivity);
+
+                /*  display toast message testing purpose
+                Toast.makeText(mContext, "Movie Title: " + mlaMovieList[position]
+                        .getOriginalTitle(), Toast.LENGTH_LONG).show();
+                */
+            }
+        });
 
         return convertView;
     }

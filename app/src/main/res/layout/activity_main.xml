@@ -10,9 +10,10 @@
         android:id="@+id/gvGridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        android:horizontalSpacing="8dp"
         android:numColumns="auto_fit"
-        android:verticalSpacing="8dp"
-        android:horizontalSpacing="8dp">
+        android:verticalSpacing="8dp">
     </GridView>
 
     <TextView

@@ -4,6 +4,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ProgressBar;
@@ -42,23 +45,49 @@ public class MainActivity extends AppCompatActivity {
         adapter = new MovieListAdapter(this, mmaMainMovieList);
         gridView.setAdapter(adapter);
 
-        loadMovieData();
+        String testQuery = "now_playing";
+        loadMovieData(testQuery);
     }
 
-    private void loadMovieData() {
+    // creating menu items
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return true;
+    }
+
+    // when options item selected run different queries
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.now_playing:
+                loadMovieData("now_playing");
+                return true;
+            case R.id.most_popular:
+                loadMovieData("most_popular");
+                return true;
+            case R.id.highest_rated:
+                loadMovieData("highest_rated");
+                return true;
+            default:
+                return true;
+        }
+    }
+
+    // method to load and bind the data to views
+    private void loadMovieData(String searchType) {
         showMovieDataView();
-
-        String testQuery = "Test";
-
-        URL movieDbURL = ConnectUtils.buildURL(testQuery);
+        URL movieDbURL = ConnectUtils.buildURL(searchType);
         new MovieDBQueryTask().execute(movieDbURL);
     }
 
+    // method to show movie data after data been loaded with no errors
     private void showMovieDataView() {
         gridView.setVisibility(View.VISIBLE);
         mtvErrorMsg.setVisibility(View.INVISIBLE);
     }
 
+    // method to show error messages if problem exists
     private void showErrorMsg() {
         gridView.setVisibility(View.INVISIBLE);
         mtvErrorMsg.setVisibility(View.VISIBLE);

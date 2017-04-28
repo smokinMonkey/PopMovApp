@@ -25,7 +25,10 @@ public class ConnectUtils {
     static final String API_KEY = "3fc3813b4582c119491777cfb5f1c297";
     static final String MOVIEDB_NOW_PLAYING_API_KEY =
             "https://api.themoviedb.org/3/movie/now_playing?api_key=3fc3813b4582c119491777cfb5f1c297&language=en-US&page=1";
-
+    static final String MOVIEDB_POPULAR_API_KEY =
+            "https://api.themoviedb.org/3/discover/movie?api_key=3fc3813b4582c119491777cfb5f1c297&language=en-US?sort_by=popularity.desc";
+    static final String MOVIEDB_HIGHEST_RATED_API_KEY =
+            "https://api.themoviedb.org/3/discover/movie?api_key=3fc3813b4582c119491777cfb5f1c297&language=en-US?certification_country=US&sort_by=vote_average.desc";
     /**
      * Method to build the URL base on the requested query
      * @param theMovieDBQuery - pass which type of query to perform
@@ -33,18 +36,31 @@ public class ConnectUtils {
      */
     public static URL buildURL(String theMovieDBQuery) {
 
-        //Uri buildURI = Uri.parse(theMovieDBQuery).buildUpon().build();
-        // to make sure working, hard coding link with api key
-        Uri buildURI = Uri.parse(MOVIEDB_NOW_PLAYING_API_KEY).buildUpon().build();
+        Uri buildURI;
 
-        URL buildURL = null;
-        try {
-            buildURL = new URL(buildURI.toString());
-        } catch (MalformedURLException e) {
-            Log.e(TAG, e.toString());
+        switch(theMovieDBQuery) {
+            case "now_playing":
+                buildURI = Uri.parse(MOVIEDB_NOW_PLAYING_API_KEY).buildUpon().build();
+                break;
+            case "most_popular":
+                buildURI = Uri.parse(MOVIEDB_POPULAR_API_KEY).buildUpon().build();
+                break;
+            case "highest_rated":
+                buildURI = Uri.parse(MOVIEDB_HIGHEST_RATED_API_KEY).buildUpon().build();
+                break;
+            default:
+                buildURI = Uri.parse(MOVIEDB_NOW_PLAYING_API_KEY).buildUpon().build();
+                break;
         }
 
-        return buildURL;
+        try {
+            URL buildURL = new URL(buildURI.toString());
+            return buildURL;
+        } catch (MalformedURLException e) {
+            Log.e(TAG, e.toString());
+            return null;
+        }
+
     }
 
     public static String getResponseFromHttpURL(URL url) throws IOException {

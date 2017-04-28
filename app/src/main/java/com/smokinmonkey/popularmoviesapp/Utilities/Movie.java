@@ -1,12 +1,14 @@
 package com.smokinmonkey.popularmoviesapp.Utilities;
 
+import java.io.Serializable;
+
 /**
  * Class to store all the values needed for each individual movie parsed
  * from json data.
  *
  * Created by smokinMonkey on 4/21/2017.
  */
-public class Movie {
+public class Movie implements Serializable {
 
     private final String LOG_TAG = Movie.class.getSimpleName();
 
@@ -30,6 +32,8 @@ public class Movie {
 
         imagePosterStr = IMAGE_BASE_URL + mPosterPath;
     }
+
+    public Movie(){};
 
     public String getOriginalTitle() { return mOriginalTitle; }
 
