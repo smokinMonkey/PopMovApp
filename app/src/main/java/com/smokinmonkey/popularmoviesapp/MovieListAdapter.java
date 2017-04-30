@@ -58,6 +58,8 @@ public class MovieListAdapter extends BaseAdapter {
         Picasso
                 .with(mContext)
                 .load(mlaMovieList[position].getImagePosterStr())
+                .placeholder(R.drawable.no_img)
+                .error(R.drawable.no_img)
                 .into(mMoviePoster);
 
         convertView.setOnClickListener(new View.OnClickListener() {

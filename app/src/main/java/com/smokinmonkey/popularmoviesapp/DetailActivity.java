@@ -43,6 +43,8 @@ public class DetailActivity extends AppCompatActivity {
         Picasso
                 .with(this)
                 .load(movieDetails.getImagePosterStr())
+                .placeholder(R.drawable.no_img)
+                .error(R.drawable.no_img)
                 .into(ivMoviePoster);
 
     }
