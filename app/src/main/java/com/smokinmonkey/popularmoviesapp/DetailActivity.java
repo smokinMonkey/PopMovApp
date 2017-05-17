@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.smokinmonkey.popularmoviesapp.Utilities.Movie;
+import com.smokinmonkey.popularmoviesapp.utilities.Movie;
 import com.squareup.picasso.Picasso;
 
 public class DetailActivity extends AppCompatActivity {

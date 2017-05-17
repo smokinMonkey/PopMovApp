@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.smokinmonkey.popularmoviesapp.Utilities.Movie;
+import com.smokinmonkey.popularmoviesapp.utilities.Movie;
 import com.squareup.picasso.Picasso;
 
 /**

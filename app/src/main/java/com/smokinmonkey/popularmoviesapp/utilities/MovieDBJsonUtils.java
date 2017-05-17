@@ -1,7 +1,10 @@
-package com.smokinmonkey.popularmoviesapp.Utilities;
+package com.smokinmonkey.popularmoviesapp.utilities;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
+
+import com.smokinmonkey.popularmoviesapp.data.MovieDbContract;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,6 +21,22 @@ public class MovieDBJsonUtils {
 
     private static final String LOG_TAG = MovieDBJsonUtils.class.getSimpleName();
 
+    // variables to store keys
+    private static final String PAGE = "page";
+    private static final String RESULTS = "results";
+
+    // required values for the project
+    private static final String MOVIE_ID = "id";
+    private static final String POSTER_PATH = "poster_path";
+    private static final String BACKDROP_PATH = "backdrop_path";
+    private static final String OVERVIEW = "overview";
+    private static final String RELEASE_DATE = "release_date";
+    private static final String ORIGINAL_TITLE = "original_title";
+    private static final String VOTE_AVERAGE = "vote_average";
+
+    // checks if there is an error code
+    private static final String STATUS_CODE = "status_code";
+
     /**
      * This method parsed the json data response and returns an array of Movie
      * class. Movie class stores all the values for each individual movie values.
@@ -28,20 +47,6 @@ public class MovieDBJsonUtils {
      */
     public static Movie[] getIndividualMovieValuesFromJson(Context context, String movieJsonStr)
             throws JSONException {
-
-        // variables to store keys
-        final String PAGE = "page";
-        final String RESULTS = "results";
-
-        // required values for the project
-        final String POSTER_PATH = "poster_path";
-        final String OVERVIEW = "overview";
-        final String RELEASE_DATE = "release_date";
-        final String ORIGINAL_TITLE = "original_title";
-        final String VOTE_AVERAGE = "vote_average";
-
-        // checks if there is an error code
-        final String STATUS_CODE = "status_code";
 
         // convert movie JSON string into JSON object
         JSONObject movieDbJson = new JSONObject(movieJsonStr);
@@ -114,5 +119,45 @@ public class MovieDBJsonUtils {
 
         return parsedMovieList;
     }
+
+    public static ContentValues[] getMovieContentValuesFromJson(
+            Context context, String movieJsonStr) throws JSONException {
+
+        JSONObject movieJson = new JSONObject(movieJsonStr);
+
+        JSONArray jsonMoviesArray = movieJson.getJSONArray(RESULTS);
+
+        ContentValues[] movieContentValues = new ContentValues[jsonMoviesArray.length()];
+
+        for(int i = 0; i < jsonMoviesArray.length(); i++) {
+            int movieId;
+            double voteAvg;
+            String movieTitle;
+            String posterPath;
+            String releaseDate;
+            String overview;
+
+            JSONObject movie = jsonMoviesArray.getJSONObject(i);
+
+            movieId = movie.getInt(MOVIE_ID);
+            voteAvg = movie.getDouble(VOTE_AVERAGE);
+            movieTitle = movie.getString(ORIGINAL_TITLE);
+            posterPath = movie.getString(POSTER_PATH);
+            releaseDate = movie.getString(RELEASE_DATE);
+            overview = movie.getString(OVERVIEW);
+
+            ContentValues movieValues = new ContentValues();
+            movieValues.put(MovieDbContract.MovieEntry.COLUMN_MOVIE_ID, movieId);
+            movieValues.put(MovieDbContract.MovieEntry.COLUMN_VOTE_AVG, voteAvg);
+            movieValues.put(MovieDbContract.MovieEntry.COLUMN_ORIGINAL_TITLE, movieTitle);
+            movieValues.put(MovieDbContract.MovieEntry.COLUMN_POSTER_PATH, posterPath);
+            movieValues.put(MovieDbContract.MovieEntry.COLUMN_RELEASE_DATE, releaseDate);
+            movieValues.put(MovieDbContract.MovieEntry.COLUMN_OVERVIEW, overview);
+
+            movieContentValues[i] = movieValues;
+        }
+        return movieContentValues;
+    }
+
 
 }

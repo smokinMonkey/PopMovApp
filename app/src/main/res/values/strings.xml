@@ -1,8 +1,18 @@
 <resources>
+
+    <!-- SQLite text -->
+    <string name="content_authority">com.smokinmonkey.popularmoviesapp</string>
+
+    <!-- app title -->
     <string name="app_name">Popular Movies App</string>
+
+    <!-- movie details text -->
     <string name="overview">Overview</string>
-    <string name="user_rating">User Rating</string>
+    <string name="user_rating">User Rating:</string>
+
+    <!-- settings text -->
     <string name="now_playing">Now Playing</string>
     <string name="most_popular">Most Popular</string>
     <string name="highest_rated">Highest Rated</string>
+
 </resources>

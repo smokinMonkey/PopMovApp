@@ -12,9 +12,9 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.smokinmonkey.popularmoviesapp.Utilities.ConnectUtils;
-import com.smokinmonkey.popularmoviesapp.Utilities.Movie;
-import com.smokinmonkey.popularmoviesapp.Utilities.MovieDBJsonUtils;
+import com.smokinmonkey.popularmoviesapp.utilities.ConnectUtils;
+import com.smokinmonkey.popularmoviesapp.utilities.Movie;
+import com.smokinmonkey.popularmoviesapp.utilities.MovieDBJsonUtils;
 
 import org.json.JSONException;
 

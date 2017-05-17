@@ -7,11 +7,11 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/ivDetailMovieBackdrop"
-        android:layout_width="fill_parent"
+        android:id="@+id/ivMoviePoster"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        tools:background="@drawable/test_backdrop"
+        tools:background="@drawable/test"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"/>
 
@@ -23,15 +23,16 @@
         android:layout_marginRight="32dp"
         android:layout_marginTop="256dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp" />
 
     <TextView
         android:id="@+id/tvDetailsMovieTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/DetailsActivityTitles"
-        app:layout_constraintTop_toBottomOf="@+id/ivDetailMovieBackdrop"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/ivMoviePoster"
         tools:text="Guardians of The Galaxy Vol.2" />
 
     <TextView
@@ -40,7 +41,7 @@
         android:layout_height="wrap_content"
         style="@style/DetailsActivityInfo"
         app:layout_constraintTop_toBottomOf="@+id/tvDetailsMovieTitle"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/ivMoviePoster"
         tools:text="May 2017" />
 
     <TextView
@@ -50,7 +51,7 @@
         android:text="@string/user_rating"
         style="@style/DetailsActivityTitles"
         app:layout_constraintTop_toBottomOf="@+id/tvDetailsReleaseDate"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toRightOf="@+id/ivMoviePoster" />
 
     <TextView
         android:id="@+id/tvDetailsUserRating"
@@ -62,7 +63,8 @@
         app:layout_constraintTop_toTopOf="@+id/tvDetailsUserRatingTitle"
         app:layout_constraintBottom_toBottomOf="@+id/tvDetailsUserRatingTitle"
         app:layout_constraintLeft_toRightOf="@+id/tvDetailsUserRatingTitle"
-        tools:text="7.8" />
+        tools:text="7.8"
+        android:layout_marginStart="8dp" />
 
     <TextView
         android:id="@+id/tvDetailsOverviewTitle"
@@ -71,7 +73,7 @@
         android:text="@string/overview"
         style="@style/DetailsActivityTitles"
         app:layout_constraintTop_toBottomOf="@+id/tvDetailsUserRatingTitle"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toRightOf="@+id/ivMoviePoster" />
 
     <TextView
         android:id="@+id/tvDetailsOverview"
@@ -79,7 +81,7 @@
         android:layout_height="wrap_content"
         style="@style/DetailsActivityInfo"
         app:layout_constraintTop_toBottomOf="@+id/tvDetailsOverviewTitle"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/ivMoviePoster"
         tools:text="The Guardians must fight to keep their newfound family together as they unravel the mysteries of Peter Quill's true parentage."/>
 
 </android.support.constraint.ConstraintLayout>

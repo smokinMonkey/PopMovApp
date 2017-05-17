@@ -1,4 +1,4 @@
-package com.smokinmonkey.popularmoviesapp.Utilities;
+package com.smokinmonkey.popularmoviesapp.utilities;
 
 import java.io.Serializable;
 
