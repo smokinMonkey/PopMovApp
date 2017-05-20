@@ -18,17 +18,18 @@ import java.util.Scanner;
  */
 public class ConnectUtils {
 
-    private static final String TAG = ConnectUtils.class.getSimpleName();
-
     // variables to store API key and different types of query requests
-    static final String MOVIEDB_NOW_PLAYING = "https://api.themoviedb.org/3/movie/now_playing";
+    static final String BASE_MOVIEDB_URL = "https://api.themoviedb.org/3/movie";
     static final String API_KEY = "3fc3813b4582c119491777cfb5f1c297";
+    static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
     static final String MOVIEDB_NOW_PLAYING_API_KEY =
             "https://api.themoviedb.org/3/movie/now_playing?api_key=3fc3813b4582c119491777cfb5f1c297&language=en-US&page=1";
     static final String MOVIEDB_POPULAR_API_KEY =
             "https://api.themoviedb.org/3/discover/movie?api_key=3fc3813b4582c119491777cfb5f1c297&language=en-US?sort_by=popularity.desc";
     static final String MOVIEDB_HIGHEST_RATED_API_KEY =
             "https://api.themoviedb.org/3/discover/movie?api_key=3fc3813b4582c119491777cfb5f1c297&language=en-US?certification_country=US&sort_by=vote_average.desc";
+    private static final String TAG = ConnectUtils.class.getSimpleName();
+
     /**
      * Method to build the URL base on the requested query
      * @param theMovieDBQuery - pass which type of query to perform

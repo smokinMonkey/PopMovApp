@@ -2,6 +2,7 @@ package com.smokinmonkey.popularmoviesapp.utilities;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 
 import com.smokinmonkey.popularmoviesapp.data.MovieDbContract;
@@ -134,6 +135,7 @@ public class MovieDBJsonUtils {
             double voteAvg;
             String movieTitle;
             String posterPath;
+            String backdropPath;
             String releaseDate;
             String overview;
 
@@ -143,20 +145,59 @@ public class MovieDBJsonUtils {
             voteAvg = movie.getDouble(VOTE_AVERAGE);
             movieTitle = movie.getString(ORIGINAL_TITLE);
             posterPath = movie.getString(POSTER_PATH);
+            backdropPath = movie.getString(BACKDROP_PATH);
             releaseDate = movie.getString(RELEASE_DATE);
             overview = movie.getString(OVERVIEW);
 
             ContentValues movieValues = new ContentValues();
+            // column values available from json
             movieValues.put(MovieDbContract.MovieEntry.COLUMN_MOVIE_ID, movieId);
             movieValues.put(MovieDbContract.MovieEntry.COLUMN_VOTE_AVG, voteAvg);
             movieValues.put(MovieDbContract.MovieEntry.COLUMN_ORIGINAL_TITLE, movieTitle);
             movieValues.put(MovieDbContract.MovieEntry.COLUMN_POSTER_PATH, posterPath);
+            movieValues.put(MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH, backdropPath);
             movieValues.put(MovieDbContract.MovieEntry.COLUMN_RELEASE_DATE, releaseDate);
             movieValues.put(MovieDbContract.MovieEntry.COLUMN_OVERVIEW, overview);
+            // URL values from builder
+            String posterUrlString = buildMoviePosterUrl(posterPath);
+            String backdropUrlString = buildMoviePosterUrl(backdropPath);
+            String movieTrailersUrlString = buildMovieTrailerUrl(movieId);
+            String movieReviewsUrlString = buildMovieReviewUrl(movieId);
+            // put them into local database
+            movieValues.put(MovieDbContract.MovieEntry.COLUMN_POSTER_STR, posterUrlString);
+            movieValues.put(MovieDbContract.MovieEntry.COLUMN_BACKDROP_STR, backdropUrlString);
+            movieValues.put(MovieDbContract.MovieEntry.COLUMN_TRAILER_STR, movieTrailersUrlString);
+            movieValues.put(MovieDbContract.MovieEntry.COLUMN_REVIEW_STR, movieReviewsUrlString);
 
             movieContentValues[i] = movieValues;
         }
         return movieContentValues;
+    }
+
+    public static String buildMoviePosterUrl(String posterPath) {
+        String posterString;
+        posterString = ConnectUtils.IMAGE_BASE_URL + posterPath;
+        return posterString;
+    }
+
+    public static String buildMovieTrailerUrl(int movieId) {
+        Uri.Builder builder = new Uri.Builder();
+        builder.appendPath(ConnectUtils.BASE_MOVIEDB_URL)
+                .appendPath(Integer.toString(movieId))
+                .appendPath("videos")
+                .appendQueryParameter("api_key", ConnectUtils.API_KEY)
+                .build();
+        return builder.toString();
+    }
+
+    public static String buildMovieReviewUrl(int movieId) {
+        Uri.Builder builder = new Uri.Builder();
+        builder.appendPath(ConnectUtils.BASE_MOVIEDB_URL)
+                .appendPath(Integer.toString(movieId))
+                .appendPath("reviews")
+                .appendQueryParameter("api_key", ConnectUtils.API_KEY)
+                .build();
+        return builder.toString();
     }
 
 

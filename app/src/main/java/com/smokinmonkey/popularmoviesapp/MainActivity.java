@@ -1,9 +1,12 @@
 package com.smokinmonkey.popularmoviesapp;
 
-import android.os.AsyncTask;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,24 +15,50 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.smokinmonkey.popularmoviesapp.utilities.ConnectUtils;
-import com.smokinmonkey.popularmoviesapp.utilities.Movie;
-import com.smokinmonkey.popularmoviesapp.utilities.MovieDBJsonUtils;
+import com.smokinmonkey.popularmoviesapp.data.MovieDbContract;
+import com.smokinmonkey.popularmoviesapp.sync.MovieSyncUtils;
 
-import org.json.JSONException;
+public class MainActivity extends AppCompatActivity implements
+        LoaderManager.LoaderCallbacks<Cursor> {
 
-import java.io.IOException;
-import java.net.URL;
+    // database utilities
+    public static final String[] MAIN_MOVIE_LIST = {
 
-public class MainActivity extends AppCompatActivity {
+            MovieDbContract.MovieEntry.COLUMN_MOVIE_ID,
+            MovieDbContract.MovieEntry.COLUMN_ORIGINAL_TITLE,
+            MovieDbContract.MovieEntry.COLUMN_RELEASE_DATE,
+            MovieDbContract.MovieEntry.COLUMN_POSTER_PATH,
+            MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH,
+            MovieDbContract.MovieEntry.COLUMN_OVERVIEW,
+            MovieDbContract.MovieEntry.COLUMN_VOTE_AVG,
 
+            MovieDbContract.MovieEntry.COLUMN_POSTER_STR,
+            MovieDbContract.MovieEntry.COLUMN_BACKDROP_STR,
+            MovieDbContract.MovieEntry.COLUMN_TRAILER_STR,
+            MovieDbContract.MovieEntry.COLUMN_REVIEW_STR
+    };
+    // index to keep track of value in the array, if the order
+    // of the above array changes, these indexes must adjust
+    public static final int INDEX_MOVIE_ID = 0;
+    public static final int INDEX_ORIGINAL_TITLE = 1;
+    public static final int INDEX_RELEASE_DATE = 2;
+    public static final int INDEX_POSTER_PATH = 3;
+    public static final int INDEX_BACKDROP_PATH = 4;
+    public static final int INDEX_OVERVIEW = 5;
+    public static final int INDEX_VOTE_AVG = 6;
+    public static final int INDEX_POSTER_STR = 7;
+    public static final int INDEX_BACKDROP_STR = 8;
+    public static final int INDEX_TRAILER_STR = 9;
+    public static final int INDEX_REVIEW_STR = 10;
+    // id used to identify the Loader, to prevent duplicate loaders
+    private static final int ID_MOVIE_LOADER = 78;
     private final String LOG_TAG = MainActivity.class.getSimpleName();
-
-    public static Movie[] mmaMainMovieList;
-
+    // gridview utilities
     private GridView gridView;
     private MovieListAdapter adapter;
+    private int mPos = GridView.NO_ID;
 
+    // debug utilities
     private TextView mtvErrorMsg;
     private ProgressBar mpbLoad;
 
@@ -42,11 +71,20 @@ public class MainActivity extends AppCompatActivity {
         mpbLoad = (ProgressBar) findViewById(R.id.pbProgressBar);
 
         gridView = (GridView) findViewById(R.id.gvGridView);
-        adapter = new MovieListAdapter(this, mmaMainMovieList);
+        // adapter = new MovieListAdapter(this, mmaMainMovieList);
         gridView.setAdapter(adapter);
 
-        String testQuery = "now_playing";
-        loadMovieData(testQuery);
+        // hide grid view until data is loaded, until then, show loading bar
+        showLoading();
+        // initialize loader
+        getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, null, this);
+
+        MovieSyncUtils.startSync(this);
+    }
+
+    private void showLoading() {
+        gridView.setVisibility(View.INVISIBLE);
+        mpbLoad.setVisibility(View.VISIBLE);
     }
 
     // creating menu items
@@ -61,24 +99,17 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.now_playing:
-                loadMovieData("now_playing");
+                //loadMovieData("now_playing");
                 return true;
             case R.id.most_popular:
-                loadMovieData("most_popular");
+                //loadMovieData("most_popular");
                 return true;
             case R.id.highest_rated:
-                loadMovieData("highest_rated");
+                //loadMovieData("highest_rated");
                 return true;
             default:
                 return true;
         }
-    }
-
-    // method to load and bind the data to views
-    private void loadMovieData(String searchType) {
-        showMovieDataView();
-        URL movieDbURL = ConnectUtils.buildURL(searchType);
-        new MovieDBQueryTask().execute(movieDbURL);
     }
 
     // method to show movie data after data been loaded with no errors
@@ -93,45 +124,29 @@ public class MainActivity extends AppCompatActivity {
         mtvErrorMsg.setVisibility(View.VISIBLE);
     }
 
-    // async task for connect internet and download data
-    public class MovieDBQueryTask extends AsyncTask<URL, Void, Movie[]> {
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mpbLoad.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Movie[] doInBackground(URL... params) {
-            if(params.length == 0) {
-                return null;
-            }
-
-            URL movieDBQuery = params[0];
-            String movieDBResults = null;
-
-            try {
-                movieDBResults = ConnectUtils.getResponseFromHttpURL(movieDBQuery);
-                Movie[] mmaMovieList;
-                mmaMovieList = MovieDBJsonUtils
-                        .getIndividualMovieValuesFromJson(MainActivity.this, movieDBResults);
-                return mmaMovieList;
-            } catch (IOException e) {
-                Log.e(LOG_TAG, e.toString());
-                return null;
-            } catch (JSONException e) {
-                Log.e(LOG_TAG, e.toString());
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Movie[] movieData) {
-            mpbLoad.setVisibility(View.INVISIBLE);
-            showMovieDataView();
-            adapter.setMovieData(movieData);
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        switch (id) {
+            case ID_MOVIE_LOADER:
+                Uri movieQueryUri = MovieDbContract.MovieEntry.CONTENT_URI;
+                return new CursorLoader(this, movieQueryUri, MAIN_MOVIE_LIST, null, null, null);
+            default:
+                throw new RuntimeException("Loader not implemented: " + id);
         }
     }
 
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        // error Cursor data null object
+        adapter.swapCursor(data);
+        if (mPos == GridView.NO_ID) mPos = 0;
+        gridView.smoothScrollToPosition(mPos);
+        if (data.getCount() != 0) showMovieDataView();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        adapter.swapCursor(null);
+    }
 }

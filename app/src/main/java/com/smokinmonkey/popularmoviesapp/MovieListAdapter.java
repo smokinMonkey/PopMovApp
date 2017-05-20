@@ -2,6 +2,7 @@ package com.smokinmonkey.popularmoviesapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,35 +10,34 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.smokinmonkey.popularmoviesapp.utilities.Movie;
-import com.squareup.picasso.Picasso;
-
 /**
  * Created by smokinMonkey on 4/22/2017.
  */
 public class MovieListAdapter extends BaseAdapter {
 
     public Context mContext;
-    public Movie[] mlaMovieList;
+    public Cursor cursorMovie;
 
-    public MovieListAdapter(Context context, Movie[] movies) {
+    public MovieListAdapter(Context context, Cursor movie) {
         this.mContext = context;
-        this.mlaMovieList = movies;
+        this.cursorMovie = movie;
     }
 
-    public void setMovieData(Movie[] movieData) {
-        mlaMovieList = movieData;
+    public void setMovieData(Cursor movieData) {
+        cursorMovie = movieData;
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        if(mlaMovieList == null) return 0;
-        return mlaMovieList.length;
+        if (cursorMovie == null) return 0;
+        return cursorMovie.getCount();
     }
 
     @Override
-    public Object getItem(int position) { return mlaMovieList[position]; }
+    public Object getItem(int position) {
+        return cursorMovie.getPosition();
+    }
 
     @Override
     public long getItemId(int position) { return position; }
@@ -55,12 +55,14 @@ public class MovieListAdapter extends BaseAdapter {
         //TextView mMovieTitle = (TextView) convertView.findViewById(R.id.tvMovieTitle);
         //mMovieTitle.setText(mlaMovieList[position].getOriginalTitle());
 
+        /*
         Picasso
                 .with(mContext)
-                .load(mlaMovieList[position].getImagePosterStr())
+                .load(cMovieList[position].getString())
                 .placeholder(R.drawable.no_img)
                 .error(R.drawable.no_img)
                 .into(mMoviePoster);
+        */
 
         convertView.setOnClickListener(new View.OnClickListener() {
 
@@ -70,7 +72,7 @@ public class MovieListAdapter extends BaseAdapter {
                 Intent intentToStartDetailActivity = new Intent(mContext, destinationClass);
 
                 Bundle b = new Bundle();
-                b.putSerializable("MovieDetails", mlaMovieList[position]);
+                //b.putSerializable("MovieDetails", cMovieList[position]);
                 intentToStartDetailActivity.putExtras(b);
 
                 mContext.startActivity(intentToStartDetailActivity);
@@ -85,4 +87,8 @@ public class MovieListAdapter extends BaseAdapter {
         return convertView;
     }
 
+    public void swapCursor(Cursor data) {
+        cursorMovie = data;
+        notifyDataSetChanged();
+    }
 }

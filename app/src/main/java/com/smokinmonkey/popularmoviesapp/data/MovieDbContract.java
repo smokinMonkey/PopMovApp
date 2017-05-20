@@ -30,15 +30,14 @@ public class MovieDbContract {
         public static final String COLUMN_ORIGINAL_TITLE = "title";
         public static final String COLUMN_RELEASE_DATE ="release_date";
         public static final String COLUMN_POSTER_PATH = "poster_path";
+        public static final String COLUMN_BACKDROP_PATH = "backdrop_path";
         public static final String COLUMN_OVERVIEW = "overview";
         public static final String COLUMN_VOTE_AVG = "vote_avg";
 
-//        public static final String COLUMN_BACKDROP_PATH = "backdrop_path";
-//
-//        public static final String COLUMN_POSTER_STR = "poster_str";
-//        public static final String COLUMN_BACKDROP_STR = "backdrop_str";
-//        public static final String COLUMN_PREVIEW_STR = "preview_str";
-//        public static final String COLUMN_REVIEW_STR = "review_str";
+        public static final String COLUMN_POSTER_STR = "poster_str";
+        public static final String COLUMN_BACKDROP_STR = "backdrop_str";
+        public static final String COLUMN_TRAILER_STR = "preview_str";
+        public static final String COLUMN_REVIEW_STR = "review_str";
 
         /**  builds URI that adds the movie id to the end of movie content URI
          *   path this is used to query movie details about a single movie
