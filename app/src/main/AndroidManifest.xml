@@ -31,6 +31,10 @@
             android:name=".data.MovieDbProvider"
             android:exported="false"/>
 
+        <service
+            android:name=".sync.MovieSyncIntentService"
+            android:exported="false" />
+
     </application>
 
 </manifest>

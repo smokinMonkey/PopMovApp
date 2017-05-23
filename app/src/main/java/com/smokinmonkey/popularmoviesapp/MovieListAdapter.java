@@ -18,9 +18,8 @@ public class MovieListAdapter extends BaseAdapter {
     public Context mContext;
     public Cursor cursorMovie;
 
-    public MovieListAdapter(Context context, Cursor movie) {
+    public MovieListAdapter(Context context) {
         this.mContext = context;
-        this.cursorMovie = movie;
     }
 
     public void setMovieData(Cursor movieData) {

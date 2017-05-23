@@ -11,7 +11,7 @@ import android.support.annotation.NonNull;
 public class MovieSyncUtils {
 
     public static void startSync(@NonNull final Context context) {
-        Intent intentToStartSync = new Intent(context, MovieSyncTask.class);
+        Intent intentToStartSync = new Intent(context, MovieSyncIntentService.class);
         context.startService(intentToStartSync);
     }
 }

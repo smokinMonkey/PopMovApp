@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements
             MovieDbContract.MovieEntry.COLUMN_TRAILER_STR,
             MovieDbContract.MovieEntry.COLUMN_REVIEW_STR
     };
+
     // index to keep track of value in the array, if the order
     // of the above array changes, these indexes must adjust
     public static final int INDEX_MOVIE_ID = 0;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements
     public static final int INDEX_BACKDROP_STR = 8;
     public static final int INDEX_TRAILER_STR = 9;
     public static final int INDEX_REVIEW_STR = 10;
+
     // id used to identify the Loader, to prevent duplicate loaders
     private static final int ID_MOVIE_LOADER = 78;
     private final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -71,7 +73,8 @@ public class MainActivity extends AppCompatActivity implements
         mpbLoad = (ProgressBar) findViewById(R.id.pbProgressBar);
 
         gridView = (GridView) findViewById(R.id.gvGridView);
-        // adapter = new MovieListAdapter(this, mmaMainMovieList);
+
+        adapter = new MovieListAdapter(this);
         gridView.setAdapter(adapter);
 
         // hide grid view until data is loaded, until then, show loading bar
@@ -124,13 +127,18 @@ public class MainActivity extends AppCompatActivity implements
         mtvErrorMsg.setVisibility(View.VISIBLE);
     }
 
-
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
             case ID_MOVIE_LOADER:
                 Uri movieQueryUri = MovieDbContract.MovieEntry.CONTENT_URI;
-                return new CursorLoader(this, movieQueryUri, MAIN_MOVIE_LIST, null, null, null);
+                return new CursorLoader(this,
+                        movieQueryUri,
+                        MAIN_MOVIE_LIST,
+                        null,
+                        null,
+                        null
+                );
             default:
                 throw new RuntimeException("Loader not implemented: " + id);
         }

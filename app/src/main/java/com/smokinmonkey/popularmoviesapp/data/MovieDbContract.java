@@ -13,7 +13,7 @@ public class MovieDbContract {
 
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
-    public static final String PATH_MOVIE = "movie";
+    public static final String PATH_MOVIE = "movies";
 
     // defines the table contents of the movies table
     public static final class MovieEntry implements BaseColumns {
