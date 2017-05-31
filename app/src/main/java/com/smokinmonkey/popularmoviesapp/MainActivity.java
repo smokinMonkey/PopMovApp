@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements
     private void showMovieDataView() {
         gridView.setVisibility(View.VISIBLE);
         mtvErrorMsg.setVisibility(View.INVISIBLE);
+        mpbLoad.setVisibility(View.INVISIBLE);
     }
 
     // method to show error messages if problem exists
@@ -146,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        // error Cursor data null object
+
         adapter.swapCursor(data);
         if (mPos == GridView.NO_ID) mPos = 0;
         gridView.smoothScrollToPosition(mPos);
@@ -154,7 +155,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.swapCursor(null);
-    }
+    public void onLoaderReset(Loader<Cursor> loader) { adapter.swapCursor(null); }
+
 }

@@ -4,21 +4,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
 /**
  * Created by smokinMonkey on 4/22/2017.
  */
 public class MovieListAdapter extends BaseAdapter {
 
-    public Context mContext;
-    public Cursor cursorMovie;
+    private Context mContext;
+    private Cursor cursorMovie;
 
-    public MovieListAdapter(Context context) {
+    public MovieListAdapter(@NonNull Context context) {
         this.mContext = context;
     }
 
@@ -43,6 +46,7 @@ public class MovieListAdapter extends BaseAdapter {
 
     @Override
     public View getView (final int position, View convertView, ViewGroup parent) {
+        cursorMovie.moveToPosition(position);
 
         if(convertView == null) {
             convertView = LayoutInflater.from(mContext)
@@ -54,14 +58,12 @@ public class MovieListAdapter extends BaseAdapter {
         //TextView mMovieTitle = (TextView) convertView.findViewById(R.id.tvMovieTitle);
         //mMovieTitle.setText(mlaMovieList[position].getOriginalTitle());
 
-        /*
         Picasso
                 .with(mContext)
-                .load(cMovieList[position].getString())
+                .load(cursorMovie.getString(MainActivity.INDEX_POSTER_STR))
                 .placeholder(R.drawable.no_img)
                 .error(R.drawable.no_img)
                 .into(mMoviePoster);
-        */
 
         convertView.setOnClickListener(new View.OnClickListener() {
 

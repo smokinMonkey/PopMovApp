@@ -3,7 +3,6 @@ package com.smokinmonkey.popularmoviesapp.sync;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.util.Log;
 
 import com.smokinmonkey.popularmoviesapp.data.MovieDbContract;
 import com.smokinmonkey.popularmoviesapp.utilities.ConnectUtils;
@@ -25,9 +24,6 @@ public class MovieSyncTask {
     synchronized public static void syncMovie(Context context) {
         try {
             URL movieRequestUrl = ConnectUtils.buildURL(typeOfMovieSearch);
-
-            Log.d("URL from syncMovie", movieRequestUrl.toString());
-
             String jsonMovieResponse = ConnectUtils.getResponseFromHttpURL(movieRequestUrl);
             ContentValues[] movieValues = MovieDBJsonUtils
                     .getMovieContentValuesFromJson(context, jsonMovieResponse);
