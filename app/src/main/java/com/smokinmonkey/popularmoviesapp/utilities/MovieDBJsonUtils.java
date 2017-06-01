@@ -161,8 +161,10 @@ public class MovieDBJsonUtils {
             // URL values from builder
             String posterUrlString = buildMoviePosterUrl(posterPath);
             String backdropUrlString = buildMoviePosterUrl(backdropPath);
+
             String movieTrailersUrlString = buildMovieTrailerUrl(movieId);
             String movieReviewsUrlString = buildMovieReviewUrl(movieId);
+
             // put them into local database
             movieValues.put(MovieDbContract.MovieEntry.COLUMN_POSTER_STR, posterUrlString);
             movieValues.put(MovieDbContract.MovieEntry.COLUMN_BACKDROP_STR, backdropUrlString);
@@ -171,6 +173,7 @@ public class MovieDBJsonUtils {
 
             movieContentValues[i] = movieValues;
         }
+
         return movieContentValues;
     }
 
@@ -182,7 +185,10 @@ public class MovieDBJsonUtils {
 
     public static String buildMovieTrailerUrl(int movieId) {
         Uri.Builder builder = new Uri.Builder();
-        builder.appendPath(ConnectUtils.BASE_MOVIEDB_URL)
+        builder.scheme(ConnectUtils.HTTP)
+                .authority(ConnectUtils.BASE_MOVIEDB_URL)
+                .appendPath("3")
+                .appendPath("movie")
                 .appendPath(Integer.toString(movieId))
                 .appendPath("videos")
                 .appendQueryParameter("api_key", ConnectUtils.API_KEY)
@@ -192,7 +198,10 @@ public class MovieDBJsonUtils {
 
     public static String buildMovieReviewUrl(int movieId) {
         Uri.Builder builder = new Uri.Builder();
-        builder.appendPath(ConnectUtils.BASE_MOVIEDB_URL)
+        builder.scheme(ConnectUtils.HTTP)
+                .authority(ConnectUtils.BASE_MOVIEDB_URL)
+                .appendPath("3")
+                .appendPath("movie")
                 .appendPath(Integer.toString(movieId))
                 .appendPath("reviews")
                 .appendQueryParameter("api_key", ConnectUtils.API_KEY)

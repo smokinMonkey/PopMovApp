@@ -2,6 +2,7 @@ package com.smokinmonkey.popularmoviesapp.data;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 /**
  * Created by smokinMonkey on 5/13/2017.
@@ -47,9 +48,18 @@ public class MovieDbContract {
          *   @return URI to query details about a single movie entry
          */
         public static Uri buildMovieUriWithId(int movieId) {
-            return CONTENT_URI.buildUpon()
+            // log URI make sure it is correct
+            Uri uriWithId = CONTENT_URI.buildUpon()
                     .appendPath(Integer.toString(movieId))
                     .build();
+
+            Log.d("MovieListAdater", "DEBUG URI with MOVIE ID: " + uriWithId);
+
+            return uriWithId;
+
+//            return CONTENT_URI.buildUpon()
+//                    .appendPath(Integer.toString(movieId))
+//                    .build();
         }
 
     }

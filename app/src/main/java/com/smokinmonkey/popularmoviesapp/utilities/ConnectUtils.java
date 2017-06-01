@@ -19,7 +19,8 @@ import java.util.Scanner;
 public class ConnectUtils {
 
     // variables to store API key and different types of query requests
-    static final String BASE_MOVIEDB_URL = "https://api.themoviedb.org/3/movie";
+    static final String HTTP = "http";
+    static final String BASE_MOVIEDB_URL = "api.themoviedb.org";
     static final String API_KEY = "3fc3813b4582c119491777cfb5f1c297";
     static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
     static final String MOVIEDB_NOW_PLAYING_API_KEY =

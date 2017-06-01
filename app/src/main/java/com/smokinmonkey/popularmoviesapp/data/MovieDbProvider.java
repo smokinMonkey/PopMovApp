@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 /**
  * Created by smokinMonkey on 5/13/2017.
@@ -15,7 +16,7 @@ import android.support.annotation.Nullable;
 
 public class MovieDbProvider extends ContentProvider {
 
-    private final String LOG_TAG = MovieDbProvider.class.getSimpleName();
+    private static final String LOG_TAG = MovieDbProvider.class.getSimpleName();
 
     public static final int CODE_MOVIE = 100;
     public static final int CODE_MOVIE_ID = 101;
@@ -30,36 +31,9 @@ public class MovieDbProvider extends ContentProvider {
         matcher.addURI(authority, MovieDbContract.PATH_MOVIE, CODE_MOVIE);
         matcher.addURI(authority, MovieDbContract.PATH_MOVIE + "/#", CODE_MOVIE_ID);
 
+        Log.d(LOG_TAG, "URI matcher: " + matcher.toString());
+
         return matcher;
-    }
-
-    @Override
-    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
-        final SQLiteDatabase db = mOpenMovieHelper.getWritableDatabase();
-
-        switch (sUriMatcher.match(uri)) {
-            case CODE_MOVIE:
-                db.beginTransaction();
-                int rowsInserted = 0;
-                try {
-                    // foreach loop to insert each value in content values into db
-                    for(ContentValues value : values) {
-                        long _id = db.insert(MovieDbContract.MovieEntry.TABLE_NAME, null, value);
-                        if(_id != -1) rowsInserted++;
-                    }
-                    db.setTransactionSuccessful();
-                } finally {
-                db.endTransaction();
-            }
-            if(rowsInserted > 0) {
-                getContext().getContentResolver().notifyChange(uri, null);
-            }
-
-            return rowsInserted;
-
-            default:
-                return super.bulkInsert(uri, values);
-        }
     }
 
     @Override
@@ -79,6 +53,17 @@ public class MovieDbProvider extends ContentProvider {
                         MovieDbContract.MovieEntry.TABLE_NAME,
                         projection,
                         selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case CODE_MOVIE_ID:
+                c = mOpenMovieHelper.getReadableDatabase().query(
+                        MovieDbContract.MovieEntry.TABLE_NAME,
+                        projection,
+                        MovieDbContract.MovieEntry.COLUMN_MOVIE_ID + " = ? ",
                         selectionArgs,
                         null,
                         null,
@@ -105,6 +90,40 @@ public class MovieDbProvider extends ContentProvider {
     }
 
     @Override
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
+        final SQLiteDatabase db = mOpenMovieHelper.getWritableDatabase();
+
+        int rowsInserted = 0;
+
+        switch (sUriMatcher.match(uri)) {
+            case CODE_MOVIE:
+                db.beginTransaction();
+                try {
+                    // foreach loop to insert each value in content values into db
+                    for(ContentValues value : values) {
+                        long _id = db.insert(MovieDbContract.MovieEntry.TABLE_NAME, null, value);
+                        if(_id != -1) rowsInserted++;
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                break;
+            default:
+                return super.bulkInsert(uri, values);
+        }
+
+        if(rowsInserted > 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        Log.d(LOG_TAG, "BULK INSERT, number of rows INSERTED: " + rowsInserted);
+
+        return rowsInserted;
+
+    }
+
+    @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         int rowsDeleted;
 
@@ -125,6 +144,9 @@ public class MovieDbProvider extends ContentProvider {
         if(rowsDeleted != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
+
+        Log.d(LOG_TAG, "DELETE, number of rows DELETED: " + rowsDeleted);
+
         return rowsDeleted;
     }
 

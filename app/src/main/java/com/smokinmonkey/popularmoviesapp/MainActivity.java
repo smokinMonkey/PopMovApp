@@ -69,10 +69,10 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        gridView = (GridView) findViewById(R.id.gvGridView);
         mtvErrorMsg = (TextView) findViewById(R.id.tvErrorMsg);
         mpbLoad = (ProgressBar) findViewById(R.id.pbProgressBar);
 
-        gridView = (GridView) findViewById(R.id.gvGridView);
 
         adapter = new MovieListAdapter(this);
         gridView.setAdapter(adapter);
@@ -147,7 +147,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
         adapter.swapCursor(data);
         if (mPos == GridView.NO_ID) mPos = 0;
         gridView.smoothScrollToPosition(mPos);
