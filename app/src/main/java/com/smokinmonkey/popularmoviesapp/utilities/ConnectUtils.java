@@ -1,5 +1,6 @@
 package com.smokinmonkey.popularmoviesapp.utilities;
 
+import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
@@ -63,6 +64,12 @@ public class ConnectUtils {
             return null;
         }
 
+    }
+
+    public static URL getUrl(Context context) throws MalformedURLException {
+        Uri buildURI = Uri.parse(MOVIEDB_NOW_PLAYING_API_KEY).buildUpon().build();
+        URL buildURL = new URL(buildURI.toString());
+        return buildURL;
     }
 
     public static String getResponseFromHttpURL(URL url) throws IOException {

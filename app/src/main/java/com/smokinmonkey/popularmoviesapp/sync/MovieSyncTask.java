@@ -19,11 +19,10 @@ import java.net.URL;
 
 public class MovieSyncTask {
 
-    public static String typeOfMovieSearch = "now_playing";
-
     synchronized public static void syncMovie(Context context) {
         try {
-            URL movieRequestUrl = ConnectUtils.buildURL(typeOfMovieSearch);
+
+            URL movieRequestUrl = ConnectUtils.getUrl(context);
             String jsonMovieResponse = ConnectUtils.getResponseFromHttpURL(movieRequestUrl);
             ContentValues[] movieValues = MovieDBJsonUtils
                     .getMovieContentValuesFromJson(context, jsonMovieResponse);

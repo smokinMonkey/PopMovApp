@@ -93,10 +93,10 @@ public class MovieDbProvider extends ContentProvider {
     public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
         final SQLiteDatabase db = mOpenMovieHelper.getWritableDatabase();
 
-        int rowsInserted = 0;
-
         switch (sUriMatcher.match(uri)) {
             case CODE_MOVIE:
+                int rowsInserted = 0;
+
                 db.beginTransaction();
                 try {
                     // foreach loop to insert each value in content values into db
@@ -108,19 +108,17 @@ public class MovieDbProvider extends ContentProvider {
                 } finally {
                     db.endTransaction();
                 }
-                break;
+
+                if(rowsInserted > 0) {
+                    getContext().getContentResolver().notifyChange(uri, null);
+                }
+
+                Log.d(LOG_TAG, "BULK INSERT, number of rows INSERTED: " + rowsInserted);
+
+                return rowsInserted;
             default:
                 return super.bulkInsert(uri, values);
         }
-
-        if(rowsInserted > 0) {
-            getContext().getContentResolver().notifyChange(uri, null);
-        }
-
-        Log.d(LOG_TAG, "BULK INSERT, number of rows INSERTED: " + rowsInserted);
-
-        return rowsInserted;
-
     }
 
     @Override
