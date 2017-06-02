@@ -57,9 +57,6 @@ public class MovieListAdapter extends BaseAdapter {
 
         ImageView mMoviePoster = (ImageView) convertView.findViewById(R.id.ivMoviePoster);
 
-        //TextView mMovieTitle = (TextView) convertView.findViewById(R.id.tvMovieTitle);
-        //mMovieTitle.setText(mlaMovieList[position].getOriginalTitle());
-
         Picasso
                 .with(mContext)
                 .load(cursorMovie.getString(MainActivity.INDEX_POSTER_STR))

@@ -101,7 +101,9 @@ public class DetailActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
         boolean cursorHasValidData = false;
+
         if(data != null && data.moveToFirst()) {
             cursorHasValidData = true;
         }
@@ -110,10 +112,6 @@ public class DetailActivity extends AppCompatActivity implements
             Log.d("ERROR!", "Cursor has no data!!!!!");
             return;
         }
-
-        int movieId = data.getInt(INDEX_MOVIE_ID);
-
-        Log.d("CHECK OUT", "Movie id: " + Integer.toString(movieId));
 
         String movieTitle = data.getString(INDEX_ORIGINAL_TITLE);
         String movieReleaseDate = data.getString(INDEX_RELEASE_DATE);
@@ -136,7 +134,7 @@ public class DetailActivity extends AppCompatActivity implements
 
             Picasso
                     .with(this)
-                    .load(movieBackdropString)
+                    .load(moviePosterString)
                     .placeholder(R.drawable.no_img)
                     .error(R.drawable.no_img)
                     .into(ivMoviePoster);
@@ -145,7 +143,7 @@ public class DetailActivity extends AppCompatActivity implements
             // load backdrop poster
             Picasso
                     .with(this)
-                    .load(moviePosterString)
+                    .load(movieBackdropString)
                     .placeholder(R.drawable.no_img)
                     .error(R.drawable.no_img)
                     .into(ivMoviePoster);

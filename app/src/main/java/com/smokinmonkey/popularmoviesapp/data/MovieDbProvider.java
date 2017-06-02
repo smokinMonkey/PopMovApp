@@ -60,11 +60,14 @@ public class MovieDbProvider extends ContentProvider {
                 );
                 break;
             case CODE_MOVIE_ID:
+                String movieId = uri.getLastPathSegment();
+                String[] selectArgs = new String[] {movieId};
+
                 c = mOpenMovieHelper.getReadableDatabase().query(
                         MovieDbContract.MovieEntry.TABLE_NAME,
                         projection,
                         MovieDbContract.MovieEntry.COLUMN_MOVIE_ID + " = ? ",
-                        selectionArgs,
+                        selectArgs,
                         null,
                         null,
                         sortOrder
