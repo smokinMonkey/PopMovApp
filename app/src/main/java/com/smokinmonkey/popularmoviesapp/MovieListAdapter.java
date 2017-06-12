@@ -68,6 +68,8 @@ public class MovieListAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View v) {
+                cursorMovie.moveToPosition(position);
+
                 Class destinationClass = DetailActivity.class;
                 Intent intentToStartDetailActivity = new Intent(mContext, destinationClass);
                 // build URI with movie id selected and set data with intent and start intent

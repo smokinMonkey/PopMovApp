@@ -1,87 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/ivMoviePoster"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        tools:background="@drawable/test"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        <ImageView
+            android:id="@+id/ivMoviePoster"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            tools:background="@drawable/test"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabFavorite"
-        android:src="@drawable/ic_grade_black_48dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginRight="32dp"
-        android:layout_marginTop="256dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabFavorite"
+            android:src="@drawable/ic_star_border_black_48dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginRight="32dp"
+            android:layout_marginTop="256dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp" />
 
-    <TextView
-        android:id="@+id/tvDetailsMovieTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/DetailsActivityTitles"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/ivMoviePoster"
-        tools:text="Guardians of The Galaxy Vol.2" />
+        <TextView
+            android:id="@+id/tvDetailsMovieTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/DetailsActivityTitles"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/ivMoviePoster"
+            tools:text="Guardians of The Galaxy Vol.2" />
 
-    <TextView
-        android:id="@+id/tvDetailsReleaseDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/DetailsActivityInfo"
-        app:layout_constraintTop_toBottomOf="@+id/tvDetailsMovieTitle"
-        app:layout_constraintLeft_toRightOf="@id/ivMoviePoster"
-        tools:text="May 2017" />
+        <TextView
+            android:id="@+id/tvDetailsReleaseDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/DetailsActivityInfo"
+            app:layout_constraintTop_toBottomOf="@+id/tvDetailsMovieTitle"
+            app:layout_constraintLeft_toRightOf="@id/ivMoviePoster"
+            tools:text="May 2017" />
 
-    <TextView
-        android:id="@+id/tvDetailsUserRatingTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/user_rating"
-        style="@style/DetailsActivityTitles"
-        app:layout_constraintTop_toBottomOf="@+id/tvDetailsReleaseDate"
-        app:layout_constraintLeft_toRightOf="@+id/ivMoviePoster" />
+        <TextView
+            android:id="@+id/tvDetailsUserRatingTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/user_rating"
+            style="@style/DetailsActivityTitles"
+            app:layout_constraintTop_toBottomOf="@+id/tvDetailsReleaseDate"
+            app:layout_constraintLeft_toRightOf="@+id/ivMoviePoster" />
 
-    <TextView
-        android:id="@+id/tvDetailsUserRating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:textAppearanceMedium"
-        android:textColor="@color/colorSecondaryText"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintTop_toTopOf="@+id/tvDetailsUserRatingTitle"
-        app:layout_constraintBottom_toBottomOf="@+id/tvDetailsUserRatingTitle"
-        app:layout_constraintLeft_toRightOf="@+id/tvDetailsUserRatingTitle"
-        tools:text="7.8"
-        android:layout_marginStart="8dp" />
+        <TextView
+            android:id="@+id/tvDetailsUserRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@color/colorSecondaryText"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintTop_toTopOf="@+id/tvDetailsUserRatingTitle"
+            app:layout_constraintBottom_toBottomOf="@+id/tvDetailsUserRatingTitle"
+            app:layout_constraintLeft_toRightOf="@+id/tvDetailsUserRatingTitle"
+            tools:text="7.8"
+            android:layout_marginStart="8dp" />
 
-    <TextView
-        android:id="@+id/tvDetailsOverviewTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/overview"
-        style="@style/DetailsActivityTitles"
-        app:layout_constraintTop_toBottomOf="@+id/tvDetailsUserRatingTitle"
-        app:layout_constraintLeft_toRightOf="@+id/ivMoviePoster" />
+        <TextView
+            android:id="@+id/tvDetailsOverviewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/overview"
+            style="@style/DetailsActivityTitles"
+            app:layout_constraintTop_toBottomOf="@+id/tvDetailsUserRatingTitle"
+            app:layout_constraintLeft_toRightOf="@+id/ivMoviePoster" />
 
-    <TextView
-        android:id="@+id/tvDetailsOverview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/DetailsActivityInfo"
-        app:layout_constraintTop_toBottomOf="@+id/tvDetailsOverviewTitle"
-        app:layout_constraintLeft_toRightOf="@+id/ivMoviePoster"
-        tools:text="The Guardians must fight to keep their newfound family together as they unravel the mysteries of Peter Quill's true parentage."/>
+        <TextView
+            android:id="@+id/tvDetailsOverview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/DetailsActivityInfo"
+            app:layout_constraintTop_toBottomOf="@+id/tvDetailsOverviewTitle"
+            app:layout_constraintLeft_toRightOf="@+id/ivMoviePoster"
+            tools:text="The Guardians must fight to keep their newfound family together as they unravel the mysteries of Peter Quill's true parentage."/>
 
-</android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>
