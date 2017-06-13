@@ -34,6 +34,7 @@ public class MovieDBJsonUtils {
     private static final String RELEASE_DATE = "release_date";
     private static final String ORIGINAL_TITLE = "original_title";
     private static final String VOTE_AVERAGE = "vote_average";
+    private static final String POP = "popularity";
 
     // checks if there is an error code
     private static final String STATUS_CODE = "status_code";
@@ -138,6 +139,7 @@ public class MovieDBJsonUtils {
             String backdropPath;
             String releaseDate;
             String overview;
+            double pop;
 
             JSONObject movie = jsonMoviesArray.getJSONObject(i);
 
@@ -148,6 +150,7 @@ public class MovieDBJsonUtils {
             backdropPath = movie.getString(BACKDROP_PATH);
             releaseDate = movie.getString(RELEASE_DATE);
             overview = movie.getString(OVERVIEW);
+            pop = movie.getDouble(POP);
 
             ContentValues movieValues = new ContentValues();
             // column values available from json
@@ -158,6 +161,7 @@ public class MovieDBJsonUtils {
             movieValues.put(MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH, backdropPath);
             movieValues.put(MovieDbContract.MovieEntry.COLUMN_RELEASE_DATE, releaseDate);
             movieValues.put(MovieDbContract.MovieEntry.COLUMN_OVERVIEW, overview);
+            movieValues.put(MovieDbContract.MovieEntry.COLUMN_POP, pop);
             // URL values from builder
             String posterUrlString = buildMoviePosterUrl(posterPath);
             String backdropUrlString = buildMoviePosterUrl(backdropPath);

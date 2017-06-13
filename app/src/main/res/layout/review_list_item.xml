@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tvLabelAuthor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/DetailsActivityTitles"
+        android:text="Author: " />
+
+    <TextView
+        android:id="@+id/tvAuthor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/DetailsActivityInfo"
+        tools:text="Jerry Cheng" />
+
+    <TextView
+        android:id="@+id/tvLabelContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/DetailsActivityTitles"
+        android:text="Review: " />
+
+    <TextView
+        android:id="@+id/tvReviewContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/DetailsActivityInfo"
+        tools:text="blah blah blah" />
+
+    <TextView
+        android:id="@+id/tvLabelUrl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/DetailsActivityTitles"
+        android:text="URL: " />
+
+    <TextView
+        android:id="@+id/tvReviewUrl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/DetailsActivityInfo"
+        tools:text="https://www.testurlreview.com" />
+
+
+</LinearLayout>

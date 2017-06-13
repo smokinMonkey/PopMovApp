@@ -25,7 +25,8 @@
             android:layout_marginTop="184dp"
             android:src="@drawable/ic_star_border_black_48dp"
             app:layout_constraintRight_toRightOf="@+id/ivDetailMovieBackdrop"
-            app:layout_constraintTop_toTopOf="@+id/ivDetailMovieBackdrop" />
+            app:layout_constraintTop_toTopOf="@+id/ivDetailMovieBackdrop"
+            android:layout_marginEnd="24dp" />
 
         <TextView
             android:id="@+id/tvDetailsMovieTitle"
@@ -33,11 +34,12 @@
             android:layout_width="360dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="24dp"
-            android:textStyle="bold"
             android:textColor="@android:color/black"
+            android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ivDetailMovieBackdrop"
-            tools:text="Guardians of The Galaxy Vol.2" />
+            tools:text="Guardians of The Galaxy Vol.2"
+            android:layout_marginStart="24dp" />
 
         <TextView
             android:id="@+id/tvDetailsReleaseDate"
@@ -48,7 +50,8 @@
             android:layout_marginTop="8dp"
             app:layout_constraintLeft_toLeftOf="@+id/tvDetailsOverview"
             app:layout_constraintTop_toBottomOf="@+id/tvDetailsMovieTitle"
-            tools:text="May 2017" />
+            tools:text="May 2017"
+            android:layout_marginStart="8dp" />
 
         <TextView
             android:id="@+id/tvDetailsUserRatingTitle"
@@ -59,13 +62,13 @@
             android:layout_marginTop="8dp"
             android:text="@string/user_rating"
             app:layout_constraintLeft_toLeftOf="@+id/tvDetailsOverview"
-            app:layout_constraintTop_toBottomOf="@+id/tvDetailsReleaseDate" />
+            app:layout_constraintTop_toBottomOf="@+id/tvDetailsReleaseDate"
+            android:layout_marginStart="8dp" />
 
         <TextView
             android:id="@+id/tvDetailsUserRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:textAppearance="?android:textAppearanceMedium"
@@ -73,7 +76,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/tvDetailsUserRatingTitle"
             app:layout_constraintLeft_toRightOf="@+id/tvDetailsUserRatingTitle"
             app:layout_constraintTop_toTopOf="@+id/tvDetailsUserRatingTitle"
-            tools:text="7.8" />
+            tools:text="7.8"
+            android:layout_marginStart="8dp" />
 
         <TextView
             android:id="@+id/tvDetailsOverviewTitle"
@@ -84,7 +88,8 @@
             android:layout_marginTop="8dp"
             android:text="@string/overview"
             app:layout_constraintLeft_toLeftOf="@+id/tvDetailsOverview"
-            app:layout_constraintTop_toBottomOf="@+id/tvDetailsUserRatingTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/tvDetailsUserRatingTitle"
+            android:layout_marginStart="8dp" />
 
         <TextView
             android:id="@+id/tvDetailsOverview"
@@ -97,35 +102,37 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvDetailsOverviewTitle"
-            tools:text="The Guardians must fight to keep their newfound family together as they unravel the mysteries of Peter Quill's true parentage." />
+            tools:text="The Guardians must fight to keep their newfound family together as they unravel the mysteries of Peter Quill's true parentage."
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="395dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@id/tvDetailsOverview"
-            app:layout_constraintLeft_toLeftOf="parent">
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDetailsOverview">
             
             <Button
                 android:id="@+id/btnPreview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Previews"
-                android:textSize="16sp"
-                android:layout_marginTop="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:drawableLeft="@drawable/ic_play_arrow_black_24dp"/>
+                android:layout_marginTop="16dp"
+                android:drawableLeft="@drawable/ic_play_arrow_black_24dp"
+                android:text="Previews"
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/btnReview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Reviews"
-                android:textSize="16sp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:drawableLeft="@drawable/ic_movie_black_24dp"/>
+                android:drawableLeft="@drawable/ic_movie_black_24dp"
+                android:text="Reviews"
+                android:textSize="16sp" />
 
         </LinearLayout>
         

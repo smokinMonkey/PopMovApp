@@ -1,5 +1,6 @@
 package com.smokinmonkey.popularmoviesapp;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
@@ -10,8 +11,11 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.smokinmonkey.popularmoviesapp.data.MovieDbContract;
 import com.squareup.picasso.Picasso;
@@ -29,6 +33,8 @@ public class DetailActivity extends AppCompatActivity implements
     private TextView tvUserRating;
     private TextView tvMovieOverview;
     private FloatingActionButton fabFavorite;
+    private Button btnPreview;
+    private Button btnReview;
 
     // database utilities
     public static final String[] MAIN_MOVIE_LIST = {
@@ -44,7 +50,9 @@ public class DetailActivity extends AppCompatActivity implements
             MovieDbContract.MovieEntry.COLUMN_POSTER_STR,
             MovieDbContract.MovieEntry.COLUMN_BACKDROP_STR,
             MovieDbContract.MovieEntry.COLUMN_TRAILER_STR,
-            MovieDbContract.MovieEntry.COLUMN_REVIEW_STR
+            MovieDbContract.MovieEntry.COLUMN_REVIEW_STR,
+
+            MovieDbContract.MovieEntry.COLUMN_FAVORITE
     };
 
     // index to keep track of value in the array, if the order
@@ -60,6 +68,7 @@ public class DetailActivity extends AppCompatActivity implements
     public static final int INDEX_BACKDROP_STR = 8;
     public static final int INDEX_TRAILER_STR = 9;
     public static final int INDEX_REVIEW_STR = 10;
+    public static final int INDEX_FAV = 11;
 
 
     @Override
@@ -71,7 +80,36 @@ public class DetailActivity extends AppCompatActivity implements
         tvMovieReleaseDate = (TextView) findViewById(R.id.tvDetailsReleaseDate);
         tvUserRating = (TextView) findViewById(R.id.tvDetailsUserRating);
         tvMovieOverview = (TextView) findViewById(R.id.tvDetailsOverview);
+
         fabFavorite = (FloatingActionButton) findViewById(R.id.fabFavorite);
+        btnPreview = (Button) findViewById(R.id.btnPreview);
+        btnReview = (Button) findViewById(R.id.btnReview);
+
+        // favorite button clicked
+        fabFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getBaseContext(), "Add to favorites clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // preview button clicked
+        btnPreview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playPreview("58ba5869925141609e01849f");
+                Toast.makeText(getBaseContext(), "Previews clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // review button clicked
+        btnReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Toast.makeText(getBaseContext(), "Reviews clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         // get URI from intent to get data
         mDetailUri = getIntent().getData();
@@ -80,6 +118,14 @@ public class DetailActivity extends AppCompatActivity implements
 
         // loader manager to start loader
         getSupportLoaderManager().initLoader(DETAIL_LOADER_ID, null, this);
+    }
+
+    public void playPreview(String videoId) {
+
+        Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("http://www.youtube.com/watch?v=" + videoId));
+        startActivity(webIntent);
+
     }
 
     @Override
@@ -101,7 +147,6 @@ public class DetailActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
         boolean cursorHasValidData = false;
 
         if(data != null && data.moveToFirst()) {
@@ -123,10 +168,19 @@ public class DetailActivity extends AppCompatActivity implements
         String movieTrailer = data.getString(INDEX_TRAILER_STR);
         String movieReview = data.getString(INDEX_REVIEW_STR);
 
+        int movieFav = data.getInt(INDEX_FAV);
+
         tvMovieTitle.setText(movieTitle);
         tvMovieReleaseDate.setText(movieReleaseDate);
         tvMovieOverview.setText(movieOverview);
         tvUserRating.setText(movieRating);
+
+        if(movieFav == 1) {
+            fabFavorite.setImageResource(R.drawable.ic_star_black_48dp);
+        } else {
+            fabFavorite.setImageResource(R.drawable.ic_star_border_black_48dp);
+        }
+
 
         int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -154,4 +208,5 @@ public class DetailActivity extends AppCompatActivity implements
     public void onLoaderReset(Loader<Cursor> loader) {
 
     }
+
 }

@@ -66,8 +66,25 @@ public class ConnectUtils {
 
     }
 
-    public static URL getUrl(Context context) throws MalformedURLException {
-        Uri buildURI = Uri.parse(MOVIEDB_NOW_PLAYING_API_KEY).buildUpon().build();
+    // gets use this to get all urls, most pop, highest rated, now playing
+    public static URL getUrl(Context context, String queryType) throws MalformedURLException {
+        Uri buildURI;
+
+        switch(queryType) {
+            case "now_playing":
+                buildURI = Uri.parse(MOVIEDB_NOW_PLAYING_API_KEY).buildUpon().build();
+                break;
+            case "most_popular":
+                buildURI = Uri.parse(MOVIEDB_POPULAR_API_KEY).buildUpon().build();
+                break;
+            case "highest_rated":
+                buildURI = Uri.parse(MOVIEDB_HIGHEST_RATED_API_KEY).buildUpon().build();
+                break;
+            default:
+                buildURI = Uri.parse(MOVIEDB_NOW_PLAYING_API_KEY).buildUpon().build();
+                break;
+        }
+
         URL buildURL = new URL(buildURI.toString());
         return buildURL;
     }

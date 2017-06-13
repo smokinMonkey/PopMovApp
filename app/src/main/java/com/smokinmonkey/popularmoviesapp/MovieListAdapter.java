@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,14 +68,11 @@ public class MovieListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 cursorMovie.moveToPosition(position);
-
                 Class destinationClass = DetailActivity.class;
                 Intent intentToStartDetailActivity = new Intent(mContext, destinationClass);
                 // build URI with movie id selected and set data with intent and start intent
                 Uri uriForMovieClicked = MovieDbContract.MovieEntry
                         .buildMovieUriWithId(cursorMovie.getInt(MainActivity.INDEX_MOVIE_ID));
-
-                Log.d("IMPORTANT", "URI for selected movie: " + uriForMovieClicked.toString());
 
                 intentToStartDetailActivity.setData(uriForMovieClicked);
 

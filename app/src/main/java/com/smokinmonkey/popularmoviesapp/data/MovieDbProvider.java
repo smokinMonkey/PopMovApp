@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 /**
  * Created by smokinMonkey on 5/13/2017.
@@ -31,8 +30,6 @@ public class MovieDbProvider extends ContentProvider {
         matcher.addURI(authority, MovieDbContract.PATH_MOVIE, CODE_MOVIE);
         matcher.addURI(authority, MovieDbContract.PATH_MOVIE + "/#", CODE_MOVIE_ID);
 
-        Log.d(LOG_TAG, "URI matcher: " + matcher.toString());
-
         return matcher;
     }
 
@@ -44,7 +41,8 @@ public class MovieDbProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection,
+                        @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         Cursor c;
 
         switch(sUriMatcher.match(uri)) {
@@ -116,8 +114,6 @@ public class MovieDbProvider extends ContentProvider {
                     getContext().getContentResolver().notifyChange(uri, null);
                 }
 
-                Log.d(LOG_TAG, "BULK INSERT, number of rows INSERTED: " + rowsInserted);
-
                 return rowsInserted;
             default:
                 return super.bulkInsert(uri, values);
@@ -146,13 +142,12 @@ public class MovieDbProvider extends ContentProvider {
             getContext().getContentResolver().notifyChange(uri, null);
         }
 
-        Log.d(LOG_TAG, "DELETE, number of rows DELETED: " + rowsDeleted);
-
         return rowsDeleted;
     }
 
     @Override
-    public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
+    public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection,
+                      @Nullable String[] selectionArgs) {
         return 0;
     }
 }
