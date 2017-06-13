@@ -148,6 +148,30 @@ public class MovieDbProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection,
                       @Nullable String[] selectionArgs) {
-        return 0;
+        SQLiteDatabase db = mOpenMovieHelper.getWritableDatabase();
+        int rowsUpdated = 0;
+
+        switch(sUriMatcher.match(uri)) {
+            case CODE_MOVIE:
+                rowsUpdated = db.update(
+                        MovieDbContract.MovieEntry.TABLE_NAME,
+                        values,
+                        null,
+                        null
+                );
+                break;
+            case CODE_MOVIE_ID:
+                String movieId = uri.getLastPathSegment();
+                String[] selectArgs = new String[] {movieId};
+                rowsUpdated = db.update(
+                        MovieDbContract.MovieEntry.TABLE_NAME,
+                        values,
+                        MovieDbContract.MovieEntry.COLUMN_MOVIE_ID + " = ? ",
+                        selectArgs
+                );
+                break;
+        }
+
+        return rowsUpdated;
     }
 }

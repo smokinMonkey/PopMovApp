@@ -1,5 +1,6 @@
 package com.smokinmonkey.popularmoviesapp;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -70,6 +71,9 @@ public class DetailActivity extends AppCompatActivity implements
     public static final int INDEX_REVIEW_STR = 10;
     public static final int INDEX_FAV = 11;
 
+    private int mMovieId;
+    private int mFav;
+    private ContentValues mThisMovie = new ContentValues();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +93,28 @@ public class DetailActivity extends AppCompatActivity implements
         fabFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getBaseContext(), "Add to favorites clicked", Toast.LENGTH_SHORT).show();
+                // check if it is already in favorites
+                if(fabFavorite.getDrawable().getConstantState() == getResources()
+                        .getDrawable(R.drawable.ic_star_border_black_48dp).getConstantState()) {
+
+                    Uri updateUri = MovieDbContract.MovieEntry.buildMovieUriWithId(mMovieId);
+                    mThisMovie.put(MovieDbContract.MovieEntry.COLUMN_FAVORITE, "1");
+
+                    getContentResolver().update(updateUri, mThisMovie, null, null);
+
+                    fabFavorite.setImageResource(R.drawable.ic_star_black_48dp);
+
+                } else if (fabFavorite.getDrawable().getConstantState() == getResources()
+                        .getDrawable(R.drawable.ic_star_black_48dp).getConstantState()) {
+
+                    Uri updateUri = MovieDbContract.MovieEntry.buildMovieUriWithId(mMovieId);
+                    mThisMovie.put(MovieDbContract.MovieEntry.COLUMN_FAVORITE, "0");
+
+                    getContentResolver().update(updateUri, mThisMovie, null, null);
+
+                    fabFavorite.setImageResource(R.drawable.ic_star_border_black_48dp);
+                }
+
             }
         });
 
@@ -121,7 +146,6 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     public void playPreview(String videoId) {
-
         Intent webIntent = new Intent(Intent.ACTION_VIEW,
                 Uri.parse("http://www.youtube.com/watch?v=" + videoId));
         startActivity(webIntent);
@@ -168,19 +192,22 @@ public class DetailActivity extends AppCompatActivity implements
         String movieTrailer = data.getString(INDEX_TRAILER_STR);
         String movieReview = data.getString(INDEX_REVIEW_STR);
 
-        int movieFav = data.getInt(INDEX_FAV);
+        mMovieId = data.getInt(INDEX_MOVIE_ID);
+        mFav = data.getInt(INDEX_FAV);
+
+        mThisMovie.put(MovieDbContract.MovieEntry.COLUMN_MOVIE_ID, mMovieId);
+        mThisMovie.put(MovieDbContract.MovieEntry.COLUMN_FAVORITE, mFav);
 
         tvMovieTitle.setText(movieTitle);
         tvMovieReleaseDate.setText(movieReleaseDate);
         tvMovieOverview.setText(movieOverview);
         tvUserRating.setText(movieRating);
 
-        if(movieFav == 1) {
+        if(mFav == 1) {
             fabFavorite.setImageResource(R.drawable.ic_star_black_48dp);
         } else {
             fabFavorite.setImageResource(R.drawable.ic_star_border_black_48dp);
         }
-
 
         int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
