@@ -36,7 +36,8 @@ public class MainActivity extends AppCompatActivity implements
             MovieDbContract.MovieEntry.COLUMN_POSTER_STR,
             MovieDbContract.MovieEntry.COLUMN_BACKDROP_STR,
             MovieDbContract.MovieEntry.COLUMN_TRAILER_STR,
-            MovieDbContract.MovieEntry.COLUMN_REVIEW_STR
+            MovieDbContract.MovieEntry.COLUMN_REVIEW_STR,
+            MovieDbContract.MovieEntry.COLUMN_FAVORITE
     };
 
     // index to keep track of value in the array, if the order
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements
     public static final int INDEX_BACKDROP_STR = 9;
     public static final int INDEX_TRAILER_STR = 10;
     public static final int INDEX_REVIEW_STR = 11;
+    public static final int INDEX_FAVORITE = 12;
 
     // id used to identify the Loader, to prevent duplicate loaders
     private static final int ID_NOW_PLAYING = 78;
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements
     private static final String NOW_PLAYING = "now_playing";
     private static final String MOST_POP = "most_popular";
     private static final String HIGHEST_RATED = "highest_rated";
+    private static final String FAVORITES = "favorites";
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -122,6 +125,10 @@ public class MainActivity extends AppCompatActivity implements
                 getSupportLoaderManager().restartLoader(ID_HIGHEST_RATED, null, this);
                 MovieSyncUtils.startSync(this, HIGHEST_RATED);
                 return true;
+            case R.id.favorite:
+                getSupportLoaderManager().restartLoader(ID_FAV, null, this);
+                MovieSyncUtils.startSync(this, FAVORITES);
+                return true;
             default:
                 return true;
         }
@@ -167,6 +174,15 @@ public class MainActivity extends AppCompatActivity implements
                         null,
                         null,
                         "vote_avg DESC"
+                );
+            case ID_FAV:
+                String[] selectArgs = {"1"};
+                return new CursorLoader(this,
+                        movieQueryUri,
+                        MAIN_MOVIE_LIST,
+                        MovieDbContract.MovieEntry.COLUMN_FAVORITE + "=?",
+                        selectArgs,
+                        null
                 );
             default:
                 throw new RuntimeException("Loader not implemented: " + id);

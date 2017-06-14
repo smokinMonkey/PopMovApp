@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
@@ -16,10 +17,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.smokinmonkey.popularmoviesapp.data.MovieDbContract;
+import com.smokinmonkey.popularmoviesapp.utilities.ConnectUtils;
+import com.smokinmonkey.popularmoviesapp.utilities.Preview;
+import com.smokinmonkey.popularmoviesapp.utilities.PreviewDBJsonUtils;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.net.URL;
 
 public class DetailActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
@@ -75,6 +83,8 @@ public class DetailActivity extends AppCompatActivity implements
     private int mFav;
     private ContentValues mThisMovie = new ContentValues();
 
+    private Preview[] mPreviews;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,8 +132,13 @@ public class DetailActivity extends AppCompatActivity implements
         btnPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                playPreview("58ba5869925141609e01849f");
-                Toast.makeText(getBaseContext(), "Previews clicked", Toast.LENGTH_SHORT).show();
+                try {
+                    loadPreview();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -131,25 +146,78 @@ public class DetailActivity extends AppCompatActivity implements
         btnReview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Toast.makeText(getBaseContext(), "Reviews clicked", Toast.LENGTH_SHORT).show();
+                gotoReview();
             }
         });
 
         // get URI from intent to get data
         mDetailUri = getIntent().getData();
-        if(mDetailUri == null)
+        if (mDetailUri == null) {
             throw new NullPointerException("URI for Movie Detail Activity cannot be null");
+        }
 
         // loader manager to start loader
         getSupportLoaderManager().initLoader(DETAIL_LOADER_ID, null, this);
     }
 
-    public void playPreview(String videoId) {
-        Intent webIntent = new Intent(Intent.ACTION_VIEW,
-                Uri.parse("http://www.youtube.com/watch?v=" + videoId));
-        startActivity(webIntent);
+    public void gotoReview() {
+        Intent reviewIntent = new Intent (this, ReviewActivity.class);
+        Bundle reviewStr = new Bundle();
 
+        reviewStr.putString("review_str", String.valueOf(mThisMovie.get(
+                MovieDbContract.MovieEntry.COLUMN_REVIEW_STR)));
+        reviewStr.putString("movie_backdrop", String.valueOf(mThisMovie.get(
+                MovieDbContract.MovieEntry.COLUMN_BACKDROP_STR)));
+        reviewStr.putString("movie_poster", String.valueOf(mThisMovie.get(
+                MovieDbContract.MovieEntry.COLUMN_POSTER_STR)));
+        reviewStr.putString("movie_title", String.valueOf(mThisMovie.get(
+                MovieDbContract.MovieEntry.COLUMN_ORIGINAL_TITLE)));
+        reviewIntent.putExtras(reviewStr);
+
+        startActivity(reviewIntent);
+    }
+
+    public void loadPreview() throws IOException, JSONException {
+        String previewStr = (String) mThisMovie.get(MovieDbContract.MovieEntry.COLUMN_TRAILER_STR);
+        URL previewURL = new URL (previewStr);
+        new PreviewQueryTask().execute(previewURL);
+    }
+
+    public void playPreview(Preview[] previews) {
+        mPreviews = previews;
+
+        Intent previewIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("http://www.youtube.com/watch?v=" + mPreviews[0].getPreviewKey()));
+        startActivity(previewIntent);
+    }
+
+    public class PreviewQueryTask extends AsyncTask<URL, Void, Preview[]> {
+        @Override
+        protected Preview[] doInBackground(URL... params) {
+            if(params.length == 0) { return null; }
+            URL previewQuery = params[0];
+            String previewResults = null;
+
+            try {
+                previewResults = ConnectUtils.getResponseFromHttpURL(previewQuery);
+                Preview[] previews;
+                previews = PreviewDBJsonUtils.getPreviewFromJson(DetailActivity.this, previewResults);
+
+                return previews;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(Preview[] previews) {
+            playPreview(previews);
+        }
     }
 
     @Override
@@ -196,7 +264,12 @@ public class DetailActivity extends AppCompatActivity implements
         mFav = data.getInt(INDEX_FAV);
 
         mThisMovie.put(MovieDbContract.MovieEntry.COLUMN_MOVIE_ID, mMovieId);
+        mThisMovie.put(MovieDbContract.MovieEntry.COLUMN_ORIGINAL_TITLE, movieTitle);
+        mThisMovie.put(MovieDbContract.MovieEntry.COLUMN_BACKDROP_STR, movieBackdropString);
+        mThisMovie.put(MovieDbContract.MovieEntry.COLUMN_POSTER_STR, moviePosterString);
         mThisMovie.put(MovieDbContract.MovieEntry.COLUMN_FAVORITE, mFav);
+        mThisMovie.put(MovieDbContract.MovieEntry.COLUMN_TRAILER_STR, movieTrailer);
+        mThisMovie.put(MovieDbContract.MovieEntry.COLUMN_REVIEW_STR, movieReview);
 
         tvMovieTitle.setText(movieTitle);
         tvMovieReleaseDate.setText(movieReleaseDate);

@@ -30,12 +30,6 @@ public class MovieSyncTask {
             if (movieValues != null && movieValues.length != 0) {
                 // content resolver for content provider
                 ContentResolver movieContentResolver = context.getContentResolver();
-//                // delete old data from local database using content provider and content resolver
-//                movieContentResolver.delete(
-//                        MovieDbContract.MovieEntry.CONTENT_URI,
-//                        null,
-//                        null
-//                );
                 // insert the new data into local database
                 movieContentResolver.bulkInsert(
                         MovieDbContract.MovieEntry.CONTENT_URI,

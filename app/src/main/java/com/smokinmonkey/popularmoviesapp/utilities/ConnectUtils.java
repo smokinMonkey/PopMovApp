@@ -2,7 +2,6 @@ package com.smokinmonkey.popularmoviesapp.utilities;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,38 +33,9 @@ public class ConnectUtils {
 
     /**
      * Method to build the URL base on the requested query
-     * @param theMovieDBQuery - pass which type of query to perform
+     * @param queryType - pass which type of query to perform
      * @return buildURL - URL build for requested query
      */
-    public static URL buildURL(String theMovieDBQuery) {
-
-        Uri buildURI;
-
-        switch(theMovieDBQuery) {
-            case "now_playing":
-                buildURI = Uri.parse(MOVIEDB_NOW_PLAYING_API_KEY).buildUpon().build();
-                break;
-            case "most_popular":
-                buildURI = Uri.parse(MOVIEDB_POPULAR_API_KEY).buildUpon().build();
-                break;
-            case "highest_rated":
-                buildURI = Uri.parse(MOVIEDB_HIGHEST_RATED_API_KEY).buildUpon().build();
-                break;
-            default:
-                buildURI = Uri.parse(MOVIEDB_NOW_PLAYING_API_KEY).buildUpon().build();
-                break;
-        }
-
-        try {
-            URL buildURL = new URL(buildURI.toString());
-            return buildURL;
-        } catch (MalformedURLException e) {
-            Log.e(TAG, e.toString());
-            return null;
-        }
-
-    }
-
     // gets use this to get all urls, most pop, highest rated, now playing
     public static URL getUrl(Context context, String queryType) throws MalformedURLException {
         Uri buildURI;

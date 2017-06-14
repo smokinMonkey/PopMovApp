@@ -100,6 +100,7 @@ public class MovieDBJsonUtils {
         for (int i = 0; i < movieArray.length(); i++) {
             String originalTitle;
             String posterPath;
+            String backdropPath;
             String overview;
             String voteAverage;
             String releaseDate;
@@ -110,12 +111,13 @@ public class MovieDBJsonUtils {
             // get the values for each individual movie json object
             originalTitle = individualMovie.getString(ORIGINAL_TITLE);
             posterPath = individualMovie.getString(POSTER_PATH);
+            backdropPath = individualMovie.getString(BACKDROP_PATH);
             overview = individualMovie.getString(OVERVIEW);
             voteAverage = individualMovie.getString(VOTE_AVERAGE);
             releaseDate = individualMovie.getString(RELEASE_DATE);
 
             // storing values into a movie class
-            parsedMovieList[i] = new Movie(originalTitle, posterPath, overview,
+            parsedMovieList[i] = new Movie(originalTitle, posterPath, backdropPath, overview,
                     voteAverage, releaseDate);
         }
 
