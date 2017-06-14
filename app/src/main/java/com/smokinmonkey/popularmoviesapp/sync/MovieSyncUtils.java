@@ -10,8 +10,9 @@ import android.support.annotation.NonNull;
 
 public class MovieSyncUtils {
 
-    public static void startSync(@NonNull final Context context) {
+    public static void startSync(@NonNull final Context context, String queryType) {
         Intent intentToStartSync = new Intent(context, MovieSyncIntentService.class);
+        intentToStartSync.putExtra("queryType", queryType);
         context.startService(intentToStartSync);
     }
 }

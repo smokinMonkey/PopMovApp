@@ -1,7 +1,7 @@
 package com.smokinmonkey.popularmoviesapp.utilities;
 
+import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +19,8 @@ import java.util.Scanner;
 public class ConnectUtils {
 
     // variables to store API key and different types of query requests
-    static final String BASE_MOVIEDB_URL = "https://api.themoviedb.org/3/movie";
+    static final String HTTP = "http";
+    static final String BASE_MOVIEDB_URL = "api.themoviedb.org";
     static final String API_KEY = "3fc3813b4582c119491777cfb5f1c297";
     static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
     static final String MOVIEDB_NOW_PLAYING_API_KEY =
@@ -32,14 +33,14 @@ public class ConnectUtils {
 
     /**
      * Method to build the URL base on the requested query
-     * @param theMovieDBQuery - pass which type of query to perform
+     * @param queryType - pass which type of query to perform
      * @return buildURL - URL build for requested query
      */
-    public static URL buildURL(String theMovieDBQuery) {
-
+    // gets use this to get all urls, most pop, highest rated, now playing
+    public static URL getUrl(Context context, String queryType) throws MalformedURLException {
         Uri buildURI;
 
-        switch(theMovieDBQuery) {
+        switch(queryType) {
             case "now_playing":
                 buildURI = Uri.parse(MOVIEDB_NOW_PLAYING_API_KEY).buildUpon().build();
                 break;
@@ -54,14 +55,8 @@ public class ConnectUtils {
                 break;
         }
 
-        try {
-            URL buildURL = new URL(buildURI.toString());
-            return buildURL;
-        } catch (MalformedURLException e) {
-            Log.e(TAG, e.toString());
-            return null;
-        }
-
+        URL buildURL = new URL(buildURI.toString());
+        return buildURL;
     }
 
     public static String getResponseFromHttpURL(URL url) throws IOException {

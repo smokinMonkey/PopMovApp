@@ -31,11 +31,13 @@ public class MainActivity extends AppCompatActivity implements
             MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH,
             MovieDbContract.MovieEntry.COLUMN_OVERVIEW,
             MovieDbContract.MovieEntry.COLUMN_VOTE_AVG,
+            MovieDbContract.MovieEntry.COLUMN_POP,
 
             MovieDbContract.MovieEntry.COLUMN_POSTER_STR,
             MovieDbContract.MovieEntry.COLUMN_BACKDROP_STR,
             MovieDbContract.MovieEntry.COLUMN_TRAILER_STR,
-            MovieDbContract.MovieEntry.COLUMN_REVIEW_STR
+            MovieDbContract.MovieEntry.COLUMN_REVIEW_STR,
+            MovieDbContract.MovieEntry.COLUMN_FAVORITE
     };
 
     // index to keep track of value in the array, if the order
@@ -47,14 +49,26 @@ public class MainActivity extends AppCompatActivity implements
     public static final int INDEX_BACKDROP_PATH = 4;
     public static final int INDEX_OVERVIEW = 5;
     public static final int INDEX_VOTE_AVG = 6;
-    public static final int INDEX_POSTER_STR = 7;
-    public static final int INDEX_BACKDROP_STR = 8;
-    public static final int INDEX_TRAILER_STR = 9;
-    public static final int INDEX_REVIEW_STR = 10;
+    public static final int INDEX_POP = 7;
+    public static final int INDEX_POSTER_STR = 8;
+    public static final int INDEX_BACKDROP_STR = 9;
+    public static final int INDEX_TRAILER_STR = 10;
+    public static final int INDEX_REVIEW_STR = 11;
+    public static final int INDEX_FAVORITE = 12;
 
     // id used to identify the Loader, to prevent duplicate loaders
-    private static final int ID_MOVIE_LOADER = 78;
+    private static final int ID_NOW_PLAYING = 78;
+    private static final int ID_MOST_POP = 79;
+    private static final int ID_HIGHEST_RATED = 80;
+    private static final int ID_FAV = 81;
+
+    private static final String NOW_PLAYING = "now_playing";
+    private static final String MOST_POP = "most_popular";
+    private static final String HIGHEST_RATED = "highest_rated";
+    private static final String FAVORITES = "favorites";
+
     private final String LOG_TAG = MainActivity.class.getSimpleName();
+
     // gridview utilities
     private GridView gridView;
     private MovieListAdapter adapter;
@@ -69,10 +83,9 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        gridView = (GridView) findViewById(R.id.gvGridView);
         mtvErrorMsg = (TextView) findViewById(R.id.tvErrorMsg);
         mpbLoad = (ProgressBar) findViewById(R.id.pbProgressBar);
-
-        gridView = (GridView) findViewById(R.id.gvGridView);
 
         adapter = new MovieListAdapter(this);
         gridView.setAdapter(adapter);
@@ -80,9 +93,8 @@ public class MainActivity extends AppCompatActivity implements
         // hide grid view until data is loaded, until then, show loading bar
         showLoading();
         // initialize loader
-        getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, null, this);
-
-        MovieSyncUtils.startSync(this);
+        getSupportLoaderManager().initLoader(ID_NOW_PLAYING, null, this);
+        MovieSyncUtils.startSync(this, NOW_PLAYING);
     }
 
     private void showLoading() {
@@ -102,13 +114,20 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.now_playing:
-                //loadMovieData("now_playing");
+                getSupportLoaderManager().restartLoader(ID_NOW_PLAYING, null, this);
+                MovieSyncUtils.startSync(this, NOW_PLAYING);
                 return true;
             case R.id.most_popular:
-                //loadMovieData("most_popular");
+                getSupportLoaderManager().restartLoader(ID_MOST_POP, null, this);
+                MovieSyncUtils.startSync(this, MOST_POP);
                 return true;
             case R.id.highest_rated:
-                //loadMovieData("highest_rated");
+                getSupportLoaderManager().restartLoader(ID_HIGHEST_RATED, null, this);
+                MovieSyncUtils.startSync(this, HIGHEST_RATED);
+                return true;
+            case R.id.favorite:
+                getSupportLoaderManager().restartLoader(ID_FAV, null, this);
+                MovieSyncUtils.startSync(this, FAVORITES);
                 return true;
             default:
                 return true;
@@ -130,14 +149,39 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Uri movieQueryUri = MovieDbContract.MovieEntry.CONTENT_URI;
         switch (id) {
-            case ID_MOVIE_LOADER:
-                Uri movieQueryUri = MovieDbContract.MovieEntry.CONTENT_URI;
+            case ID_NOW_PLAYING:
                 return new CursorLoader(this,
                         movieQueryUri,
                         MAIN_MOVIE_LIST,
                         null,
                         null,
+                        "release_date DESC"
+                );
+            case ID_MOST_POP:
+                return new CursorLoader(this,
+                        movieQueryUri,
+                        MAIN_MOVIE_LIST,
+                        null,
+                        null,
+                        "popularity DESC"
+                );
+            case ID_HIGHEST_RATED:
+                return new CursorLoader(this,
+                        movieQueryUri,
+                        MAIN_MOVIE_LIST,
+                        null,
+                        null,
+                        "vote_avg DESC"
+                );
+            case ID_FAV:
+                String[] selectArgs = {"1"};
+                return new CursorLoader(this,
+                        movieQueryUri,
+                        MAIN_MOVIE_LIST,
+                        MovieDbContract.MovieEntry.COLUMN_FAVORITE + "=?",
+                        selectArgs,
                         null
                 );
             default:
@@ -147,7 +191,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
         adapter.swapCursor(data);
         if (mPos == GridView.NO_ID) mPos = 0;
         gridView.smoothScrollToPosition(mPos);

@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class MovieDbHelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "movie.db";
+    public static final String DATABASE_NAME = "movies.db";
     public static final int DATABASE_VERSION = 3;
 
     public MovieDbHelper(Context context) {
@@ -20,7 +20,8 @@ public class MovieDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         final String SQL_CREATE_MOVIE_TABLE =
-                "CREATE TABLE " + MovieDbContract.MovieEntry.TABLE_NAME + " (" +
+
+                "CREATE TABLE " + MovieDbContract.MovieEntry.TABLE_NAME + " ( " +
                         MovieDbContract.MovieEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         MovieDbContract.MovieEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL, " +
                         MovieDbContract.MovieEntry.COLUMN_ORIGINAL_TITLE + " TEXT NOT NULL, " +
@@ -28,15 +29,16 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                         MovieDbContract.MovieEntry.COLUMN_POSTER_PATH + " TEXT, " +
                         MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH + " TEXT, " +
                         MovieDbContract.MovieEntry.COLUMN_OVERVIEW + " TEXT, " +
-                        MovieDbContract.MovieEntry.COLUMN_VOTE_AVG + " REAL, " +
+                        MovieDbContract.MovieEntry.COLUMN_VOTE_AVG + " TEXT, " +
+                        MovieDbContract.MovieEntry.COLUMN_POP + " REAL, " +
 
                         MovieDbContract.MovieEntry.COLUMN_POSTER_STR + " TEXT, " +
                         MovieDbContract.MovieEntry.COLUMN_BACKDROP_STR + " TEXT, " +
                         MovieDbContract.MovieEntry.COLUMN_TRAILER_STR + " TEXT, " +
                         MovieDbContract.MovieEntry.COLUMN_REVIEW_STR + " TEXT, " +
+                        MovieDbContract.MovieEntry.COLUMN_FAVORITE + " INTEGER, " +
 
-
-                "UNIQUE (" + MovieDbContract.MovieEntry.COLUMN_MOVIE_ID + ") ON CONFLICT REPLACE);";
+                "UNIQUE (" + MovieDbContract.MovieEntry.COLUMN_MOVIE_ID + ") ON CONFLICT IGNORE);";
 
         db.execSQL(SQL_CREATE_MOVIE_TABLE);
     }

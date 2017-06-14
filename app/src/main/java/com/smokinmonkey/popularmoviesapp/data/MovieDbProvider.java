@@ -15,7 +15,7 @@ import android.support.annotation.Nullable;
 
 public class MovieDbProvider extends ContentProvider {
 
-    private final String LOG_TAG = MovieDbProvider.class.getSimpleName();
+    private static final String LOG_TAG = MovieDbProvider.class.getSimpleName();
 
     public static final int CODE_MOVIE = 100;
     public static final int CODE_MOVIE_ID = 101;
@@ -34,35 +34,6 @@ public class MovieDbProvider extends ContentProvider {
     }
 
     @Override
-    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
-        final SQLiteDatabase db = mOpenMovieHelper.getWritableDatabase();
-
-        switch (sUriMatcher.match(uri)) {
-            case CODE_MOVIE:
-                db.beginTransaction();
-                int rowsInserted = 0;
-                try {
-                    // foreach loop to insert each value in content values into db
-                    for(ContentValues value : values) {
-                        long _id = db.insert(MovieDbContract.MovieEntry.TABLE_NAME, null, value);
-                        if(_id != -1) rowsInserted++;
-                    }
-                    db.setTransactionSuccessful();
-                } finally {
-                db.endTransaction();
-            }
-            if(rowsInserted > 0) {
-                getContext().getContentResolver().notifyChange(uri, null);
-            }
-
-            return rowsInserted;
-
-            default:
-                return super.bulkInsert(uri, values);
-        }
-    }
-
-    @Override
     public boolean onCreate() {
         mOpenMovieHelper = new MovieDbHelper(getContext());
         return true;
@@ -70,7 +41,8 @@ public class MovieDbProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection,
+                        @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         Cursor c;
 
         switch(sUriMatcher.match(uri)) {
@@ -80,6 +52,20 @@ public class MovieDbProvider extends ContentProvider {
                         projection,
                         selection,
                         selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case CODE_MOVIE_ID:
+                String movieId = uri.getLastPathSegment();
+                String[] selectArgs = new String[] {movieId};
+
+                c = mOpenMovieHelper.getReadableDatabase().query(
+                        MovieDbContract.MovieEntry.TABLE_NAME,
+                        projection,
+                        MovieDbContract.MovieEntry.COLUMN_MOVIE_ID + " = ? ",
+                        selectArgs,
                         null,
                         null,
                         sortOrder
@@ -105,6 +91,36 @@ public class MovieDbProvider extends ContentProvider {
     }
 
     @Override
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
+        final SQLiteDatabase db = mOpenMovieHelper.getWritableDatabase();
+
+        switch (sUriMatcher.match(uri)) {
+            case CODE_MOVIE:
+                int rowsInserted = 0;
+
+                db.beginTransaction();
+                try {
+                    // foreach loop to insert each value in content values into db
+                    for(ContentValues value : values) {
+                        long _id = db.insert(MovieDbContract.MovieEntry.TABLE_NAME, null, value);
+                        if(_id != -1) rowsInserted++;
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+
+                if(rowsInserted > 0) {
+                    getContext().getContentResolver().notifyChange(uri, null);
+                }
+
+                return rowsInserted;
+            default:
+                return super.bulkInsert(uri, values);
+        }
+    }
+
+    @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         int rowsDeleted;
 
@@ -125,11 +141,37 @@ public class MovieDbProvider extends ContentProvider {
         if(rowsDeleted != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
+
         return rowsDeleted;
     }
 
     @Override
-    public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+    public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection,
+                      @Nullable String[] selectionArgs) {
+        SQLiteDatabase db = mOpenMovieHelper.getWritableDatabase();
+        int rowsUpdated = 0;
+
+        switch(sUriMatcher.match(uri)) {
+            case CODE_MOVIE:
+                rowsUpdated = db.update(
+                        MovieDbContract.MovieEntry.TABLE_NAME,
+                        values,
+                        null,
+                        null
+                );
+                break;
+            case CODE_MOVIE_ID:
+                String movieId = uri.getLastPathSegment();
+                String[] selectArgs = new String[] {movieId};
+                rowsUpdated = db.update(
+                        MovieDbContract.MovieEntry.TABLE_NAME,
+                        values,
+                        MovieDbContract.MovieEntry.COLUMN_MOVIE_ID + " = ? ",
+                        selectArgs
+                );
+                break;
+        }
+
+        return rowsUpdated;
     }
 }

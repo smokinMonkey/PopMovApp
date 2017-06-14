@@ -3,7 +3,7 @@ package com.smokinmonkey.popularmoviesapp;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Bundle;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.smokinmonkey.popularmoviesapp.data.MovieDbContract;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -55,9 +56,6 @@ public class MovieListAdapter extends BaseAdapter {
 
         ImageView mMoviePoster = (ImageView) convertView.findViewById(R.id.ivMoviePoster);
 
-        //TextView mMovieTitle = (TextView) convertView.findViewById(R.id.tvMovieTitle);
-        //mMovieTitle.setText(mlaMovieList[position].getOriginalTitle());
-
         Picasso
                 .with(mContext)
                 .load(cursorMovie.getString(MainActivity.INDEX_POSTER_STR))
@@ -69,19 +67,16 @@ public class MovieListAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View v) {
+                cursorMovie.moveToPosition(position);
                 Class destinationClass = DetailActivity.class;
                 Intent intentToStartDetailActivity = new Intent(mContext, destinationClass);
+                // build URI with movie id selected and set data with intent and start intent
+                Uri uriForMovieClicked = MovieDbContract.MovieEntry
+                        .buildMovieUriWithId(cursorMovie.getInt(MainActivity.INDEX_MOVIE_ID));
 
-                Bundle b = new Bundle();
-                //b.putSerializable("MovieDetails", cMovieList[position]);
-                intentToStartDetailActivity.putExtras(b);
+                intentToStartDetailActivity.setData(uriForMovieClicked);
 
                 mContext.startActivity(intentToStartDetailActivity);
-
-                /*  display toast message testing purpose
-                Toast.makeText(mContext, "Movie Title: " + mlaMovieList[position]
-                        .getOriginalTitle(), Toast.LENGTH_LONG).show();
-                */
             }
         });
 

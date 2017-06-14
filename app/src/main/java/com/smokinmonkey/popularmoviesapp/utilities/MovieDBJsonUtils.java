@@ -34,6 +34,7 @@ public class MovieDBJsonUtils {
     private static final String RELEASE_DATE = "release_date";
     private static final String ORIGINAL_TITLE = "original_title";
     private static final String VOTE_AVERAGE = "vote_average";
+    private static final String POP = "popularity";
 
     // checks if there is an error code
     private static final String STATUS_CODE = "status_code";
@@ -99,6 +100,7 @@ public class MovieDBJsonUtils {
         for (int i = 0; i < movieArray.length(); i++) {
             String originalTitle;
             String posterPath;
+            String backdropPath;
             String overview;
             String voteAverage;
             String releaseDate;
@@ -109,12 +111,13 @@ public class MovieDBJsonUtils {
             // get the values for each individual movie json object
             originalTitle = individualMovie.getString(ORIGINAL_TITLE);
             posterPath = individualMovie.getString(POSTER_PATH);
+            backdropPath = individualMovie.getString(BACKDROP_PATH);
             overview = individualMovie.getString(OVERVIEW);
             voteAverage = individualMovie.getString(VOTE_AVERAGE);
             releaseDate = individualMovie.getString(RELEASE_DATE);
 
             // storing values into a movie class
-            parsedMovieList[i] = new Movie(originalTitle, posterPath, overview,
+            parsedMovieList[i] = new Movie(originalTitle, posterPath, backdropPath, overview,
                     voteAverage, releaseDate);
         }
 
@@ -138,6 +141,7 @@ public class MovieDBJsonUtils {
             String backdropPath;
             String releaseDate;
             String overview;
+            double pop;
 
             JSONObject movie = jsonMoviesArray.getJSONObject(i);
 
@@ -148,6 +152,7 @@ public class MovieDBJsonUtils {
             backdropPath = movie.getString(BACKDROP_PATH);
             releaseDate = movie.getString(RELEASE_DATE);
             overview = movie.getString(OVERVIEW);
+            pop = movie.getDouble(POP);
 
             ContentValues movieValues = new ContentValues();
             // column values available from json
@@ -158,11 +163,14 @@ public class MovieDBJsonUtils {
             movieValues.put(MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH, backdropPath);
             movieValues.put(MovieDbContract.MovieEntry.COLUMN_RELEASE_DATE, releaseDate);
             movieValues.put(MovieDbContract.MovieEntry.COLUMN_OVERVIEW, overview);
+            movieValues.put(MovieDbContract.MovieEntry.COLUMN_POP, pop);
             // URL values from builder
             String posterUrlString = buildMoviePosterUrl(posterPath);
             String backdropUrlString = buildMoviePosterUrl(backdropPath);
+
             String movieTrailersUrlString = buildMovieTrailerUrl(movieId);
             String movieReviewsUrlString = buildMovieReviewUrl(movieId);
+
             // put them into local database
             movieValues.put(MovieDbContract.MovieEntry.COLUMN_POSTER_STR, posterUrlString);
             movieValues.put(MovieDbContract.MovieEntry.COLUMN_BACKDROP_STR, backdropUrlString);
@@ -171,6 +179,7 @@ public class MovieDBJsonUtils {
 
             movieContentValues[i] = movieValues;
         }
+
         return movieContentValues;
     }
 
@@ -182,7 +191,10 @@ public class MovieDBJsonUtils {
 
     public static String buildMovieTrailerUrl(int movieId) {
         Uri.Builder builder = new Uri.Builder();
-        builder.appendPath(ConnectUtils.BASE_MOVIEDB_URL)
+        builder.scheme(ConnectUtils.HTTP)
+                .authority(ConnectUtils.BASE_MOVIEDB_URL)
+                .appendPath("3")
+                .appendPath("movie")
                 .appendPath(Integer.toString(movieId))
                 .appendPath("videos")
                 .appendQueryParameter("api_key", ConnectUtils.API_KEY)
@@ -192,7 +204,10 @@ public class MovieDBJsonUtils {
 
     public static String buildMovieReviewUrl(int movieId) {
         Uri.Builder builder = new Uri.Builder();
-        builder.appendPath(ConnectUtils.BASE_MOVIEDB_URL)
+        builder.scheme(ConnectUtils.HTTP)
+                .authority(ConnectUtils.BASE_MOVIEDB_URL)
+                .appendPath("3")
+                .appendPath("movie")
                 .appendPath(Integer.toString(movieId))
                 .appendPath("reviews")
                 .appendQueryParameter("api_key", ConnectUtils.API_KEY)

@@ -19,11 +19,10 @@ import java.net.URL;
 
 public class MovieSyncTask {
 
-    public static String typeOfMovieSearch = "now_playing";
+    synchronized public static void syncMovie(Context context, String queryType) {
 
-    synchronized public static void syncMovie(Context context) {
         try {
-            URL movieRequestUrl = ConnectUtils.buildURL(typeOfMovieSearch);
+            URL movieRequestUrl = ConnectUtils.getUrl(context, queryType);
             String jsonMovieResponse = ConnectUtils.getResponseFromHttpURL(movieRequestUrl);
             ContentValues[] movieValues = MovieDBJsonUtils
                     .getMovieContentValuesFromJson(context, jsonMovieResponse);
@@ -31,12 +30,6 @@ public class MovieSyncTask {
             if (movieValues != null && movieValues.length != 0) {
                 // content resolver for content provider
                 ContentResolver movieContentResolver = context.getContentResolver();
-                // delete old data from local database using content provider and content resolver
-                movieContentResolver.delete(
-                        MovieDbContract.MovieEntry.CONTENT_URI,
-                        null,
-                        null
-                );
                 // insert the new data into local database
                 movieContentResolver.bulkInsert(
                         MovieDbContract.MovieEntry.CONTENT_URI,

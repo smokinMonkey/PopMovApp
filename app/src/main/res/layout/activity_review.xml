@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.smokinmonkey.popularmoviesapp.ReviewActivity"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/ivReviewMovieBackdrop"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:adjustViewBounds="true"
+        tools:background="@drawable/test_backdrop" />
+
+    <TextView
+        android:id="@+id/tvReviewMoviteTitle"
+        android:layout_width="395dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/ivReviewMovieBackdrop"
+        app:layout_constraintLeft_toLeftOf="parent"
+        style="@style/DetailsActivityTitles"
+        android:textStyle="bold"
+        tools:text="Guardians of Galaxy Vol. 2" />
+
+    <ListView
+        android:id="@+id/lvReviews"
+        android:layout_width="395dp"
+        android:layout_height="272dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvReviewMoviteTitle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_margin="8dp">
+
+    </ListView>
+
+</android.support.constraint.ConstraintLayout>

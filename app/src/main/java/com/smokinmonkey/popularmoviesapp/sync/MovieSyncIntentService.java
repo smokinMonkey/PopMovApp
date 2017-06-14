@@ -18,6 +18,8 @@ public class MovieSyncIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        MovieSyncTask.syncMovie(this);
+        String queryType;
+        queryType = intent.getExtras().getString("queryType");
+        MovieSyncTask.syncMovie(this, queryType);
     }
 }
