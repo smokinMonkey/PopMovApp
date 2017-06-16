@@ -29,9 +29,10 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
-
+    // butter knife - data binding
+    compile 'com.jakewharton:butterknife:8.6.0'
+    // image loader using URL
     compile 'com.squareup.picasso:picasso:2.5.2'
-
     // Android debug database
     compile 'com.amitshekhar.android:debug-db:1.0.0'
 

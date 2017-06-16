@@ -67,6 +67,10 @@ public class MainActivity extends AppCompatActivity implements
     private static final String HIGHEST_RATED = "highest_rated";
     private static final String FAVORITES = "favorites";
 
+
+    private String mQueryType = NOW_PLAYING;
+    private int mQueryTypeId = ID_NOW_PLAYING;
+
     private final String LOG_TAG = MainActivity.class.getSimpleName();
 
     // gridview utilities
@@ -83,6 +87,11 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (savedInstanceState != null) {
+            mQueryType = savedInstanceState.getString("queryType");
+            mQueryTypeId = savedInstanceState.getInt("queryTypeId");
+        }
+
         gridView = (GridView) findViewById(R.id.gvGridView);
         mtvErrorMsg = (TextView) findViewById(R.id.tvErrorMsg);
         mpbLoad = (ProgressBar) findViewById(R.id.pbProgressBar);
@@ -93,8 +102,22 @@ public class MainActivity extends AppCompatActivity implements
         // hide grid view until data is loaded, until then, show loading bar
         showLoading();
         // initialize loader
-        getSupportLoaderManager().initLoader(ID_NOW_PLAYING, null, this);
-        MovieSyncUtils.startSync(this, NOW_PLAYING);
+        getSupportLoaderManager().initLoader(mQueryTypeId, null, this);
+        MovieSyncUtils.startSync(this, mQueryType);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString("queryType", mQueryType);
+        outState.putInt("queryTypeId", mQueryTypeId);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        mQueryType = savedInstanceState.getString("queryType");
+        mQueryTypeId = savedInstanceState.getInt("queryTypeId");
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     private void showLoading() {
@@ -114,18 +137,26 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.now_playing:
+                mQueryType = NOW_PLAYING;
+                mQueryTypeId = ID_NOW_PLAYING;
                 getSupportLoaderManager().restartLoader(ID_NOW_PLAYING, null, this);
                 MovieSyncUtils.startSync(this, NOW_PLAYING);
                 return true;
             case R.id.most_popular:
+                mQueryType = MOST_POP;
+                mQueryTypeId = ID_MOST_POP;
                 getSupportLoaderManager().restartLoader(ID_MOST_POP, null, this);
                 MovieSyncUtils.startSync(this, MOST_POP);
                 return true;
             case R.id.highest_rated:
+                mQueryType = HIGHEST_RATED;
+                mQueryTypeId = ID_HIGHEST_RATED;
                 getSupportLoaderManager().restartLoader(ID_HIGHEST_RATED, null, this);
                 MovieSyncUtils.startSync(this, HIGHEST_RATED);
                 return true;
             case R.id.favorite:
+                mQueryType = FAVORITES;
+                mQueryTypeId = ID_FAV;
                 getSupportLoaderManager().restartLoader(ID_FAV, null, this);
                 MovieSyncUtils.startSync(this, FAVORITES);
                 return true;

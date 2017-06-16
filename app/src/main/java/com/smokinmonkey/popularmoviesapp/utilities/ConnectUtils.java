@@ -26,9 +26,10 @@ public class ConnectUtils {
     static final String MOVIEDB_NOW_PLAYING_API_KEY =
             "https://api.themoviedb.org/3/movie/now_playing?api_key=3fc3813b4582c119491777cfb5f1c297&language=en-US&page=1";
     static final String MOVIEDB_POPULAR_API_KEY =
-            "https://api.themoviedb.org/3/discover/movie?api_key=3fc3813b4582c119491777cfb5f1c297&language=en-US?sort_by=popularity.desc";
+            "https://api.themoviedb.org/3/movie/popular?api_key=3fc3813b4582c119491777cfb5f1c297&language=en-US?sort_by=popularity.desc";
     static final String MOVIEDB_HIGHEST_RATED_API_KEY =
-            "https://api.themoviedb.org/3/discover/movie?api_key=3fc3813b4582c119491777cfb5f1c297&language=en-US?certification_country=US&sort_by=vote_average.desc";
+            "https://api.themoviedb.org/3/movie/top_rated?api_key=3fc3813b4582c119491777cfb5f1c297&language=en-US?certification_country=US&sort_by=vote_average.desc";
+
     private static final String TAG = ConnectUtils.class.getSimpleName();
 
     /**
