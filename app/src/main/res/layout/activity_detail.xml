@@ -124,7 +124,7 @@
                 android:layout_marginTop="16dp"
                 android:drawableLeft="@drawable/ic_play_arrow_black_24dp"
                 android:text="Previews"
-                android:textSize="16sp" />
+                android:textSize="@dimen/button_text_size" />
 
             <Button
                 android:id="@+id/btnReview"
@@ -134,7 +134,7 @@
                 android:layout_marginRight="16dp"
                 android:drawableLeft="@drawable/ic_movie_black_24dp"
                 android:text="Reviews"
-                android:textSize="16sp" />
+                android:textSize="@dimen/button_text_size" />
 
         </LinearLayout>
         
